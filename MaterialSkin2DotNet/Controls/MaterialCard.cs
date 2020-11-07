@@ -98,6 +98,14 @@
             // button shadow (blend with form shadow)
             DrawHelper.DrawSquareShadow(g, ClientRectangle);
 
+            // Rectangle Fill
+            if (SkinManager.Theme == MaterialSkinManager.Themes.LIGHT) {
+                g.FillRectangle(new SolidBrush(Color.FromArgb(242, 242, 242)), cardRectF);
+            }
+            else {
+                g.FillRectangle(new SolidBrush(Color.FromArgb(50, 50, 50)), cardRectF);
+            }
+
             // Draw card
             using (SolidBrush normalBrush = new SolidBrush(BackColor)) {
                 g.FillPath(normalBrush, cardPath);
