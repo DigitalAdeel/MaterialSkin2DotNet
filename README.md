@@ -12,7 +12,9 @@ Or simply search for MaterialSkin2DotNet on the **Nuget Package Manager** inside
 
 # Release Notes
 Same Features mentioned at leocb's [repo](https://github.com/leocb/MaterialSkin/).
+
 New fixes and features will be added soon.
+
 Icon used for [package](https://icons8.com/icon/46639/layers)
 
 
