@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Description>Migration of MaterialSkin.2 (Leonardo C Bottaro) from .NET Framework Winforms to .NET Winforms also known as .NET Core Winforms. Minimum supported .NET Version is .NetCore 3.1. Latest .NET 5.0 Preview version is also supported.</Description>
+    <Copyright>Copyright Digital Adeel © 2020</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/DigitalAdeel/MaterialSkin2DotNet</PackageProjectUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageIcon>nuget_32.png</PackageIcon>
+    <RepositoryUrl>https://github.com/DigitalAdeel/MaterialSkin2DotNet</RepositoryUrl>
+    <PackageTags>materialskin,materialui,materialuinet</PackageTags>
+    <PackageReleaseNotes>First Ever Release.
+Same features mentioned at Leonardo's Repo.</PackageReleaseNotes>
+    <Authors>Digital Adeel, leocb, IgnaceMaes</Authors>
+    <Company>Digital Adeel</Company>
+    <Owner>Digital Adeel</Owner>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Controls\FlexibleMaterialForm.resx">
+      <Generator></Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="..\..\..\..\Pictures\nuget_32.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+</Project>
