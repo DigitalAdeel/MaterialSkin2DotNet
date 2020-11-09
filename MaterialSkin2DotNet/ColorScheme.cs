@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-
-namespace MaterialSkin2DotNet {
+﻿namespace MaterialSkin2DotNet {
 
     using System.Drawing;
 
