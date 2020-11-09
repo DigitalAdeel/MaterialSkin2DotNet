@@ -7,12 +7,8 @@
     using System.Drawing;
     using System.Drawing.Text;
     using System.Linq;
-    using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
-    using System.Security.Cryptography.X509Certificates;
     using System.Windows.Forms;
-    using System.Windows.Forms.Design;
-    using System.Windows.Forms.PropertyGridInternal;
     using static MaterialSkin2DotNet.MaterialSkinManager;
 
     public class MaterialForm : Form, IMaterialControl {
@@ -170,21 +166,22 @@
 
         private Padding originalPadding;
 
+        public Primary _primaryColor = Primary.Green400;
+        public Primary _primaryDarkColor = Primary.Green700;
+        public Primary _primaryLightColor = Primary.Green100;
+        public Accent _accentColor = Accent.Blue200;
+        public TextShade _textShade = TextShade.WHITE;
+        public Themes _theme = Themes.LIGHT;
+        public MaterialForm _materialForm;
+
         public MaterialForm() {
-            DrawerWidth = 300;
+            DrawerWidth = 200;
             DrawerIsOpen = false;
             DrawerShowIconsWhenHidden = false;
             DrawerAutoHide = true;
             DrawerIndicatorWidth = 0;
             DrawerHighlightWithAccent = true;
             DrawerBackgroundWithAccent = false;
-
-            /*  Primarycolor = Primary.Green400;
-              PrimaryDarkcolor = Primary.Green700;
-              PrimaryLightcolor = Primary.Green100;
-              Accentcolor = Accent.Blue200;
-              Textshade = TextShade.WHITE;
-              Theme = Themes.DARK;*/
 
             FormBorderStyle = FormBorderStyle.None;
             Sizable = true;
@@ -209,84 +206,126 @@
             };
         }
 
-        /*        //ColorScheme
-                [DefaultValue(Primary.Green500)]
-                [Category("ColorScheme")]
-                [Browsable(true)]
-                [Description("Sets Primary Color of Material Form")]
-                public Primary Primarycolor {
-                    get {
-                        return Primarycolor;
-                    }
-                    set {
-                        ColorScheme colorScheme = new ColorScheme(Primarycolor, PrimaryDarkcolor, PrimaryLightcolor, Accentcolor, Textshade);
-                        SkinManager.ColorScheme = colorScheme; this.Refresh();
-                    }
-                }
+        //ColorScheme
 
-                [DefaultValue(Primary.Green700)]
-                [Category("ColorScheme")]
-                [Browsable(true)]
-                [Description("Sets Dark Primary Color of Material Form")]
-                public Primary PrimaryDarkcolor {
-                    get {
-                        return PrimaryDarkcolor;
-                    }
-                    set {
-                        ColorScheme colorScheme = new ColorScheme(Primarycolor, PrimaryDarkcolor, PrimaryLightcolor, Accentcolor, Textshade);
-                        SkinManager.ColorScheme = colorScheme; this.Refresh();
-                    }
-                }
+        [DefaultValue(Primary.Green500)]
+        [Category("Appearence")]
+        [Browsable(true)]
+        [Description("Sets Primary Color of Material Form")]
+        public Primary PrimaryColor {
+            get {
+                return _primaryColor;
+            }
+            set {
+                _primaryColor = value;
+                // Sets ColorSceme's Property when Propertychanged
+                SkinManager.ColorScheme = new ColorScheme(
+                    _primaryColor, _primaryDarkColor, _primaryLightColor, _accentColor, _textShade);
+                //Invalidate refreshes the form changes when property changed. Credit Goes to MetroFramework for this easy method.
+                Invalidate();
+            }
+        }
 
-                [DefaultValue(Primary.Green100)]
-                [Category("ColorScheme")]
-                [Browsable(true)]
-                [Description("Sets Light Primary Color of Material Form")]
-                public Primary PrimaryLightcolor {
-                    get {
-                        return PrimaryLightcolor;
-                    }
-                    set {
-                        ColorScheme colorScheme = new ColorScheme(Primarycolor, PrimaryDarkcolor, PrimaryLightcolor, Accentcolor, Textshade);
-                        SkinManager.ColorScheme = colorScheme; this.Refresh();
-                    }
-                }
+        [DefaultValue(Primary.Green700)]
+        [Category("Appearence")]
+        [Browsable(true)]
+        [Description("Sets Dark Primary Color of Material Form")]
+        public Primary PrimaryDarkColor {
+            get {
+                return _primaryDarkColor;
+            }
+            set {
+                _primaryDarkColor = value;
+                // Sets ColorSceme's Property when Propertychanged
+                SkinManager.ColorScheme = new ColorScheme(
+                    _primaryColor, _primaryDarkColor, _primaryLightColor, _accentColor, _textShade);
+                //Invalidate refreshes the form changes when property changed.
+                Invalidate();
+            }
+        }
 
-                [DefaultValue(Accent.Blue200)]
-                [Category("ColorScheme")]
-                [Browsable(true)]
-                [Description("Sets Accent Color of Material Form")]
-                public Accent Accentcolor {
-                    get {
-                        return Accentcolor;
-                    }
-                    set {
-                        ColorScheme colorScheme = new ColorScheme(Primarycolor, PrimaryDarkcolor, PrimaryLightcolor, Accentcolor, Textshade);
-                        SkinManager.ColorScheme = colorScheme;
-                        this.Refresh();
-                    }
-                }
+        [DefaultValue(Primary.Green100)]
+        [Category("Appearence")]
+        [Browsable(true)]
+        [Description("Sets Light Primary Color of Material Form")]
+        public Primary PrimaryLightColor {
+            get {
+                return _primaryLightColor;
+            }
+            set {
+                _primaryLightColor = value;
+                // Sets ColorSceme's Property when Propertychanged
+                SkinManager.ColorScheme = new ColorScheme(
+                    _primaryColor, _primaryDarkColor, _primaryLightColor, _accentColor, _textShade);
+                //Invalidate refreshes the form changes when property changed.
+                Invalidate();
+            }
+        }
 
-                [DefaultValue(TextShade.WHITE)]
-                [Category("ColorScheme")]
-                [Browsable(true)]
-                [Description("Sets TextShade of Material Form")]
-                public TextShade Textshade {
-                    get {
-                        return Textshade;
-                    }
-                    set {
-                        ColorScheme colorScheme = new ColorScheme(Primarycolor, PrimaryDarkcolor, PrimaryLightcolor, Accentcolor, Textshade);
-                        SkinManager.ColorScheme = colorScheme;
-                        this.Refresh();
-                    }
-                }
+        [DefaultValue(Accent.Blue200)]
+        [Category("Appearence")]
+        [Browsable(true)]
+        [Description("Sets Accent Color of Material Form")]
+        public Accent AccentColor {
+            get {
+                return _accentColor;
+            }
+            set {
+                _accentColor = value;
+                // Sets ColorSceme's Property when Propertychanged
+                SkinManager.ColorScheme = new ColorScheme(
+                    _primaryColor, _primaryDarkColor, _primaryLightColor, _accentColor, _textShade);
+                //Invalidate refreshes the form changes when property changed.
+                Invalidate();
+            }
+        }
 
-                [DefaultValue(Themes.DARK)]
-                [Category("ColorScheme")]
-                [Browsable(true)]
-                [Description("Sets Theme of Material Form")]
-                public Themes Theme { get; set; }*/
+        [DefaultValue(TextShade.WHITE)]
+        [Category("Appearence")]
+        [Browsable(true)]
+        [Description("Sets TextShade of Material Form")]
+        public TextShade TextShade {
+            get {
+                return _textShade;
+            }
+            set {
+                _textShade = value;
+                // Sets ColorSceme's Property when Propertychanged
+                SkinManager.ColorScheme = new ColorScheme(
+                    _primaryColor, _primaryDarkColor, _primaryLightColor, _accentColor, _textShade);
+                //Invalidate refreshes the form changes when property changed.
+                Invalidate();
+            }
+        }
+
+        [DefaultValue(Themes.DARK)]
+        [Category("Appearence")]
+        [Browsable(true)]
+        [Description("Sets Theme of Material Form")]
+        public Themes Theme {
+            get {
+                return _theme;
+            }
+            set {
+                _theme = value;
+                // Sets ColorSceme's Property when Propertychanged
+                SkinManager.Theme = _theme;
+                //Invalidate refreshes the form changes when property changed.
+                Invalidate();
+            }
+        }
+
+        [Category("Appearence")]
+        [Browsable(true)]
+        [Description("Sets Default Material Form")]
+        public MaterialForm FormToManage {
+            get { return _materialForm; }
+            set {
+                _materialForm = value;
+                SkinManager.AddFormToManage(_materialForm);
+                Invalidate();
+            }
+        }
 
         // Drawer overlay and speed improvements
         private bool _drawerShowIconsWhenHidden;
