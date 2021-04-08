@@ -7,7 +7,12 @@ using System.Windows.Forms;
 
 namespace MaterialSkin2DotNet.Controls {
 
-    public class FlexibleMaterialForm : MaterialForm, IMaterialControl {
+    /// <summary>
+    /// The form to show the customized message box.
+    /// It is defined as an internal class to keep the public interface of the FlexibleMessageBox clean.
+    /// </summary>
+    public class FlexibleMaterialForm : MaterialForm, IMaterialControl
+    {
         private readonly MaterialSkinManager materialSkinManager;
 
         /// <summary>
@@ -40,6 +45,7 @@ namespace MaterialSkin2DotNet.Controls {
         public static double MAX_HEIGHT_FACTOR = 0.9;
 
         private MaterialMultiLineTextBox richTextBoxMessage;
+        private MaterialLabel materialLabel1;
 
         /// <summary>
         /// Erforderliche Designervariable.
@@ -50,8 +56,10 @@ namespace MaterialSkin2DotNet.Controls {
         /// Verwendete Ressourcen bereinigen.
         /// </summary>
         /// <param name="disposing">True, wenn verwaltete Ressourcen gelöscht werden sollen; andernfalls False.</param>
-        protected override void Dispose(bool disposing) {
-            if (disposing && (components != null)) {
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
                 components.Dispose();
             }
             base.Dispose(disposing);
@@ -61,15 +69,17 @@ namespace MaterialSkin2DotNet.Controls {
         /// Erforderliche Methode für die Designerunterstützung.
         /// Der Inhalt der Methode darf nicht mit dem Code-Editor geändert werden.
         /// </summary>
-        private void InitializeComponent() {
+        private void InitializeComponent()
+        {
             this.components = new System.ComponentModel.Container();
-            this.leftButton = new MaterialSkin2DotNet.Controls.MaterialButton();
+            this.leftButton = new MaterialSkin.Controls.MaterialButton();
             this.FlexibleMaterialFormBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.messageContainer = new System.Windows.Forms.Panel();
+            this.materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
             this.pictureBoxForIcon = new System.Windows.Forms.PictureBox();
-            this.richTextBoxMessage = new MaterialSkin2DotNet.Controls.MaterialMultiLineTextBox();
-            this.middleButton = new MaterialSkin2DotNet.Controls.MaterialButton();
-            this.rightButton = new MaterialSkin2DotNet.Controls.MaterialButton();
+            this.richTextBoxMessage = new MaterialSkin.Controls.MaterialMultiLineTextBox();
+            this.middleButton = new MaterialSkin.Controls.MaterialButton();
+            this.rightButton = new MaterialSkin.Controls.MaterialButton();
             ((System.ComponentModel.ISupportInitialize)(this.FlexibleMaterialFormBindingSource)).BeginInit();
             this.messageContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIcon)).BeginInit();
@@ -85,15 +95,15 @@ namespace MaterialSkin2DotNet.Controls {
             this.leftButton.DrawShadows = true;
             this.leftButton.HighEmphasis = false;
             this.leftButton.Icon = null;
-            this.leftButton.Location = new System.Drawing.Point(44, 163);
+            this.leftButton.Location = new System.Drawing.Point(40, 163);
             this.leftButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.leftButton.MinimumSize = new System.Drawing.Size(0, 24);
-            this.leftButton.MouseState = MaterialSkin2DotNet.MouseState.HOVER;
+            this.leftButton.MouseState = MaterialSkin.MouseState.HOVER;
             this.leftButton.Name = "leftButton";
             this.leftButton.Size = new System.Drawing.Size(108, 36);
             this.leftButton.TabIndex = 2;
             this.leftButton.Text = "OK";
-            this.leftButton.Type = MaterialSkin2DotNet.Controls.MaterialButton.MaterialButtonType.Text;
+            this.leftButton.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Text;
             this.leftButton.UseAccentColor = false;
             this.leftButton.UseVisualStyleBackColor = true;
             this.leftButton.Visible = false;
@@ -104,17 +114,34 @@ namespace MaterialSkin2DotNet.Controls {
             | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.messageContainer.BackColor = System.Drawing.Color.White;
+            this.messageContainer.Controls.Add(this.materialLabel1);
             this.messageContainer.Controls.Add(this.pictureBoxForIcon);
             this.messageContainer.Controls.Add(this.richTextBoxMessage);
-            this.messageContainer.Location = new System.Drawing.Point(0, 65);
+            this.messageContainer.Location = new System.Drawing.Point(1, 65);
             this.messageContainer.Name = "messageContainer";
-            this.messageContainer.Size = new System.Drawing.Size(388, 81);
+            this.messageContainer.Size = new System.Drawing.Size(382, 89);
             this.messageContainer.TabIndex = 1;
+            // 
+            // materialLabel1
+            // 
+            this.materialLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.materialLabel1.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.FlexibleMaterialFormBindingSource, "MessageText", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.materialLabel1.Depth = 0;
+            this.materialLabel1.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.materialLabel1.Location = new System.Drawing.Point(56, 12);
+            this.materialLabel1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel1.Name = "materialLabel1";
+            this.materialLabel1.Size = new System.Drawing.Size(314, 65);
+            this.materialLabel1.TabIndex = 9;
+            this.materialLabel1.Text = "<Message>";
+            this.materialLabel1.Visible = false;
             //
             // pictureBoxForIcon
             //
             this.pictureBoxForIcon.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBoxForIcon.Location = new System.Drawing.Point(15, 19);
+            this.pictureBoxForIcon.Location = new System.Drawing.Point(12, 12);
             this.pictureBoxForIcon.Name = "pictureBoxForIcon";
             this.pictureBoxForIcon.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxForIcon.TabIndex = 8;
@@ -132,13 +159,13 @@ namespace MaterialSkin2DotNet.Controls {
             this.richTextBoxMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.richTextBoxMessage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.richTextBoxMessage.Hint = "";
-            this.richTextBoxMessage.Location = new System.Drawing.Point(47, 2);
+            this.richTextBoxMessage.Location = new System.Drawing.Point(56, 12);
             this.richTextBoxMessage.Margin = new System.Windows.Forms.Padding(0);
-            this.richTextBoxMessage.MouseState = MaterialSkin2DotNet.MouseState.HOVER;
+            this.richTextBoxMessage.MouseState = MaterialSkin.MouseState.HOVER;
             this.richTextBoxMessage.Name = "richTextBoxMessage";
             this.richTextBoxMessage.ReadOnly = true;
             this.richTextBoxMessage.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.richTextBoxMessage.Size = new System.Drawing.Size(338, 78);
+            this.richTextBoxMessage.Size = new System.Drawing.Size(314, 65);
             this.richTextBoxMessage.TabIndex = 0;
             this.richTextBoxMessage.TabStop = false;
             this.richTextBoxMessage.Text = "<Message>";
@@ -154,15 +181,15 @@ namespace MaterialSkin2DotNet.Controls {
             this.middleButton.DrawShadows = true;
             this.middleButton.HighEmphasis = true;
             this.middleButton.Icon = null;
-            this.middleButton.Location = new System.Drawing.Point(160, 163);
+            this.middleButton.Location = new System.Drawing.Point(156, 163);
             this.middleButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.middleButton.MinimumSize = new System.Drawing.Size(0, 24);
-            this.middleButton.MouseState = MaterialSkin2DotNet.MouseState.HOVER;
+            this.middleButton.MouseState = MaterialSkin.MouseState.HOVER;
             this.middleButton.Name = "middleButton";
             this.middleButton.Size = new System.Drawing.Size(102, 36);
             this.middleButton.TabIndex = 3;
             this.middleButton.Text = "OK";
-            this.middleButton.Type = MaterialSkin2DotNet.Controls.MaterialButton.MaterialButtonType.Text;
+            this.middleButton.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Text;
             this.middleButton.UseAccentColor = false;
             this.middleButton.UseVisualStyleBackColor = true;
             this.middleButton.Visible = false;
@@ -177,15 +204,15 @@ namespace MaterialSkin2DotNet.Controls {
             this.rightButton.DrawShadows = true;
             this.rightButton.HighEmphasis = true;
             this.rightButton.Icon = null;
-            this.rightButton.Location = new System.Drawing.Point(270, 163);
+            this.rightButton.Location = new System.Drawing.Point(266, 163);
             this.rightButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.rightButton.MinimumSize = new System.Drawing.Size(0, 24);
-            this.rightButton.MouseState = MaterialSkin2DotNet.MouseState.HOVER;
+            this.rightButton.MouseState = MaterialSkin.MouseState.HOVER;
             this.rightButton.Name = "rightButton";
             this.rightButton.Size = new System.Drawing.Size(106, 36);
             this.rightButton.TabIndex = 0;
             this.rightButton.Text = "OK";
-            this.rightButton.Type = MaterialSkin2DotNet.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.rightButton.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             this.rightButton.UseAccentColor = false;
             this.rightButton.UseVisualStyleBackColor = true;
             this.rightButton.Visible = false;
@@ -193,7 +220,7 @@ namespace MaterialSkin2DotNet.Controls {
             // FlexibleMaterialForm
             //
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(388, 208);
+            this.ClientSize = new System.Drawing.Size(384, 208);
             this.Controls.Add(this.rightButton);
             this.Controls.Add(this.middleButton);
             this.Controls.Add(this.messageContainer);
@@ -247,10 +274,10 @@ namespace MaterialSkin2DotNet.Controls {
         private static readonly String STANDARD_MESSAGEBOX_SEPARATOR_SPACES = "   ";
 
         //These are the possible buttons (in a standard MessageBox)
-        private enum ButtonID { /// <summary>
-
-                                /// Defines the OK
-                                /// </summary>
+        private enum ButtonID
+        { /// <summary>
+          /// Defines the OK
+          /// </summary>
             OK = 0,
 
             /// <summary>
@@ -286,10 +313,10 @@ namespace MaterialSkin2DotNet.Controls {
 
         //These are the buttons texts for different languages.
         //If you want to add a new language, add it here and in the GetButtonText-Function
-        private enum TwoLetterISOLanguageID { /// <summary>
-
-                                              /// Defines the en
-                                              /// </summary>
+        private enum TwoLetterISOLanguageID
+        { /// <summary>
+          /// Defines the en
+          /// </summary>
             en,
 
             /// <summary>
@@ -305,7 +332,12 @@ namespace MaterialSkin2DotNet.Controls {
             /// <summary>
             /// Defines the it
             /// </summary>
-            it
+            it,
+
+            /// <summary>
+            /// Defines the fr
+            /// </summary>
+            fr
         };
 
         /// <summary>
@@ -329,6 +361,11 @@ namespace MaterialSkin2DotNet.Controls {
         private static readonly String[] BUTTON_TEXTS_ITALIAN_IT = { "OK", "Annulla", "&Sì", "&No", "&Interrompi", "&Riprova", "&Ignora" };
 
         /// <summary>
+        /// Defines the BUTTON_TEXTS_ENGLISH_FR
+        /// </summary>
+        private static readonly String[] BUTTON_TEXTS_FRENCH_FR = { "OK", "Annuler", "&Oui", "&Non", "&Interrompre", "&Recommencer", "&Ignorer" };
+
+        /// <summary>
         /// Defines the defaultButton
         /// </summary>
         private MessageBoxDefaultButton defaultButton;
@@ -346,7 +383,8 @@ namespace MaterialSkin2DotNet.Controls {
         /// <summary>
         /// Prevents a default instance of the <see cref="FlexibleMaterialForm"/> class from being created.
         /// </summary>
-        private FlexibleMaterialForm() {
+        private FlexibleMaterialForm()
+        {
             InitializeComponent();
 
             //Try to evaluate the language. If this fails, the fallback language English will be used
@@ -365,8 +403,10 @@ namespace MaterialSkin2DotNet.Controls {
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns>The string rows as 1-dimensional array</returns>
-        private static string[] GetStringRows(string message) {
-            if (string.IsNullOrEmpty(message)) {
+        private static string[] GetStringRows(string message)
+        {
+            if (string.IsNullOrEmpty(message))
+            {
                 return null;
             }
 
@@ -380,13 +420,16 @@ namespace MaterialSkin2DotNet.Controls {
         /// </summary>
         /// <param name="buttonID">The ID of the button.</param>
         /// <returns>The button text</returns>
-        private string GetButtonText(ButtonID buttonID) {
+        private string GetButtonText(ButtonID buttonID)
+        {
             var buttonTextArrayIndex = Convert.ToInt32(buttonID);
 
-            switch (this.languageID) {
+            switch (this.languageID)
+            {
                 case TwoLetterISOLanguageID.de: return BUTTON_TEXTS_GERMAN_DE[buttonTextArrayIndex];
                 case TwoLetterISOLanguageID.es: return BUTTON_TEXTS_SPANISH_ES[buttonTextArrayIndex];
                 case TwoLetterISOLanguageID.it: return BUTTON_TEXTS_ITALIAN_IT[buttonTextArrayIndex];
+                case TwoLetterISOLanguageID.fr: return BUTTON_TEXTS_FRENCH_FR[buttonTextArrayIndex];
 
                 default: return BUTTON_TEXTS_ENGLISH_EN[buttonTextArrayIndex];
             }
@@ -400,15 +443,18 @@ namespace MaterialSkin2DotNet.Controls {
         /// </summary>
         /// <param name="workingAreaFactor">The given working area factor.</param>
         /// <returns>The corrected given working area factor.</returns>
-        private static double GetCorrectedWorkingAreaFactor(double workingAreaFactor) {
+        private static double GetCorrectedWorkingAreaFactor(double workingAreaFactor)
+        {
             const double MIN_FACTOR = 0.2;
             const double MAX_FACTOR = 1.0;
 
-            if (workingAreaFactor < MIN_FACTOR) {
+            if (workingAreaFactor < MIN_FACTOR)
+            {
                 return MIN_FACTOR;
             }
 
-            if (workingAreaFactor > MAX_FACTOR) {
+            if (workingAreaFactor > MAX_FACTOR)
+            {
                 return MAX_FACTOR;
             }
 
@@ -421,9 +467,11 @@ namespace MaterialSkin2DotNet.Controls {
         /// </summary>
         /// <param name="FlexibleMaterialForm">The FlexibleMessageBox dialog.</param>
         /// <param name="owner">The owner.</param>
-        private static void SetDialogStartPosition(FlexibleMaterialForm FlexibleMaterialForm, IWin32Window owner) {
+        private static void SetDialogStartPosition(FlexibleMaterialForm FlexibleMaterialForm, IWin32Window owner)
+        {
             //If no owner given: Center on current screen
-            if (owner == null) {
+            if (owner == null)
+            {
                 var screen = Screen.FromPoint(Cursor.Position);
                 FlexibleMaterialForm.StartPosition = FormStartPosition.Manual;
                 FlexibleMaterialForm.Left = screen.Bounds.Left + screen.Bounds.Width / 2 - FlexibleMaterialForm.Width / 2;
@@ -438,14 +486,16 @@ namespace MaterialSkin2DotNet.Controls {
         /// <param name="FlexibleMaterialForm">The FlexibleMessageBox dialog.</param>
         /// <param name="text">The text (the longest text row is used to calculate the dialog width).</param>
         /// <param name="caption">The caption<see cref="string"/></param>
-        private static void SetDialogSizes(FlexibleMaterialForm FlexibleMaterialForm, string text, string caption) {
+        private static void SetDialogSizes(FlexibleMaterialForm FlexibleMaterialForm, string text, string caption)
+        {
             //First set the bounds for the maximum dialog size
             FlexibleMaterialForm.MaximumSize = new Size(Convert.ToInt32(SystemInformation.WorkingArea.Width * FlexibleMaterialForm.GetCorrectedWorkingAreaFactor(MAX_WIDTH_FACTOR)),
                                                           Convert.ToInt32(SystemInformation.WorkingArea.Height * FlexibleMaterialForm.GetCorrectedWorkingAreaFactor(MAX_HEIGHT_FACTOR)));
 
             //Get rows. Exit if there are no rows to render...
             var stringRows = GetStringRows(text);
-            if (stringRows == null) {
+            if (stringRows == null)
+            {
                 return;
             }
 
@@ -462,6 +512,9 @@ namespace MaterialSkin2DotNet.Controls {
             var marginWidth = FlexibleMaterialForm.Width - FlexibleMaterialForm.richTextBoxMessage.Width;
             var marginHeight = FlexibleMaterialForm.Height - FlexibleMaterialForm.richTextBoxMessage.Height;
 
+            var minimumHeight = FlexibleMaterialForm.messageContainer.Top + (FlexibleMaterialForm.pictureBoxForIcon.Height + 2 * 8) + 54;
+            if (marginHeight < minimumHeight) marginHeight = minimumHeight;
+
             //Set calculated dialog size (if the calculated values exceed the maximums, they were cut by windows forms automatically)
             FlexibleMaterialForm.Size = new Size(textWidth + marginWidth,
                                                    textHeight + marginHeight);
@@ -473,8 +526,10 @@ namespace MaterialSkin2DotNet.Controls {
         /// </summary>
         /// <param name="FlexibleMaterialForm">The FlexibleMessageBox dialog.</param>
         /// <param name="icon">The MessageBoxIcon.</param>
-        private static void SetDialogIcon(FlexibleMaterialForm FlexibleMaterialForm, MessageBoxIcon icon) {
-            switch (icon) {
+        private static void SetDialogIcon(FlexibleMaterialForm FlexibleMaterialForm, MessageBoxIcon icon)
+        {
+            switch (icon)
+            {
                 case MessageBoxIcon.Information:
                     FlexibleMaterialForm.pictureBoxForIcon.Image = SystemIcons.Information.ToBitmap();
                     break;
@@ -507,9 +562,11 @@ namespace MaterialSkin2DotNet.Controls {
         /// <param name="FlexibleMaterialForm">The FlexibleMessageBox dialog.</param>
         /// <param name="buttons">The buttons.</param>
         /// <param name="defaultButton">The default button.</param>
-        private static void SetDialogButtons(FlexibleMaterialForm FlexibleMaterialForm, MessageBoxButtons buttons, MessageBoxDefaultButton defaultButton) {
+        private static void SetDialogButtons(FlexibleMaterialForm FlexibleMaterialForm, MessageBoxButtons buttons, MessageBoxDefaultButton defaultButton)
+        {
             //Set the buttons visibilities and texts
-            switch (buttons) {
+            switch (buttons)
+            {
                 case MessageBoxButtons.AbortRetryIgnore:
                     FlexibleMaterialForm.visibleButtonsCount = 3;
 
@@ -567,7 +624,7 @@ namespace MaterialSkin2DotNet.Controls {
                     FlexibleMaterialForm.rightButton.Text = FlexibleMaterialForm.GetButtonText(ButtonID.YES);
                     FlexibleMaterialForm.rightButton.DialogResult = DialogResult.Yes;
 
-                    FlexibleMaterialForm.ControlBox = false;
+                    //FlexibleMaterialForm.ControlBox = false;
                     break;
 
                 case MessageBoxButtons.YesNoCancel:
@@ -608,12 +665,14 @@ namespace MaterialSkin2DotNet.Controls {
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void FlexibleMaterialForm_Shown(object sender, EventArgs e) {
+        private void FlexibleMaterialForm_Shown(object sender, EventArgs e)
+        {
             int buttonIndexToFocus = 1;
             Button buttonToFocus;
 
             //Set the default button...
-            switch (this.defaultButton) {
+            switch (this.defaultButton)
+            {
                 case MessageBoxDefaultButton.Button1:
                 default:
                     buttonIndexToFocus = 1;
@@ -628,17 +687,21 @@ namespace MaterialSkin2DotNet.Controls {
                     break;
             }
 
-            if (buttonIndexToFocus > this.visibleButtonsCount) {
+            if (buttonIndexToFocus > this.visibleButtonsCount)
+            {
                 buttonIndexToFocus = this.visibleButtonsCount;
             }
 
-            if (buttonIndexToFocus == 3) {
+            if (buttonIndexToFocus == 3)
+            {
                 buttonToFocus = this.rightButton;
             }
-            else if (buttonIndexToFocus == 2) {
+            else if (buttonIndexToFocus == 2)
+            {
                 buttonToFocus = this.middleButton;
             }
-            else {
+            else
+            {
                 buttonToFocus = this.leftButton;
             }
 
@@ -650,16 +713,20 @@ namespace MaterialSkin2DotNet.Controls {
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.LinkClickedEventArgs"/> instance containing the event data.</param>
-        private void richTextBoxMessage_LinkClicked(object sender, LinkClickedEventArgs e) {
-            try {
+        private void richTextBoxMessage_LinkClicked(object sender, LinkClickedEventArgs e)
+        {
+            try
+            {
                 Cursor.Current = Cursors.WaitCursor;
                 Process.Start(e.LinkText);
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 //Let the caller of FlexibleMaterialForm decide what to do with this exception...
                 throw;
             }
-            finally {
+            finally
+            {
                 Cursor.Current = Cursors.Default;
             }
         }
@@ -669,9 +736,11 @@ namespace MaterialSkin2DotNet.Controls {
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.KeyEventArgs"/> instance containing the event data.</param>
-        internal void FlexibleMaterialForm_KeyUp(object sender, KeyEventArgs e) {
+        internal void FlexibleMaterialForm_KeyUp(object sender, KeyEventArgs e)
+        {
             //Handle standard key strikes for clipboard copy: "Ctrl + C" and "Ctrl + Insert"
-            if (e.Control && (e.KeyCode == Keys.C || e.KeyCode == Keys.Insert)) {
+            if (e.Control && (e.KeyCode == Keys.C || e.KeyCode == Keys.Insert))
+            {
                 var buttonsTextLine = (this.leftButton.Visible ? this.leftButton.Text + STANDARD_MESSAGEBOX_SEPARATOR_SPACES : string.Empty)
                                     + (this.middleButton.Visible ? this.middleButton.Text + STANDARD_MESSAGEBOX_SEPARATOR_SPACES : string.Empty)
                                     + (this.rightButton.Visible ? this.rightButton.Text + STANDARD_MESSAGEBOX_SEPARATOR_SPACES : string.Empty);
@@ -712,10 +781,12 @@ namespace MaterialSkin2DotNet.Controls {
         /// <param name="icon">The icon.</param>
         /// <param name="defaultButton">The default button.</param>
         /// <returns>The dialog result.</returns>
-        public static DialogResult Show(IWin32Window owner, string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton) {
+        public static DialogResult Show(IWin32Window owner, string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, bool UseRichTextBox = true)
+        {
             //Create a new instance of the FlexibleMessageBox form
             var FlexibleMaterialForm = new FlexibleMaterialForm();
             FlexibleMaterialForm.ShowInTaskbar = false;
+            FlexibleMaterialForm.Sizable = false;
 
             //Bind the caption and the message text
             FlexibleMaterialForm.CaptionText = caption;
@@ -731,6 +802,9 @@ namespace MaterialSkin2DotNet.Controls {
             //Set the font for all controls
             FlexibleMaterialForm.Font = FONT;
             FlexibleMaterialForm.richTextBoxMessage.Font = FONT;
+            FlexibleMaterialForm.richTextBoxMessage.Visible = UseRichTextBox;
+			FlexibleMaterialForm.materialLabel1.Font = FONT;
+			FlexibleMaterialForm.materialLabel1.Visible = !UseRichTextBox;
 
             //Calculate the dialogs start size (Try to auto-size width to show longest text row). Also set the maximum dialog size.
             SetDialogSizes(FlexibleMaterialForm, text, caption);
@@ -742,7 +816,8 @@ namespace MaterialSkin2DotNet.Controls {
             return FlexibleMaterialForm.ShowDialog(owner);
         }
 
-        private void FlexibleMaterialForm_Load(object sender, EventArgs e) {
+        private void FlexibleMaterialForm_Load(object sender, EventArgs e)
+        {
         }
     }
 }
