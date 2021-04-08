@@ -152,7 +152,7 @@
         private Rectangle _maxButtonBounds;
         private Rectangle _xButtonBounds;
         private Rectangle _actionBarBounds;
-        private Rectangle __drawerButtonBounds;
+        private Rectangle _drawerButtonBounds;
 
         public Rectangle UserArea {
             get {
@@ -605,8 +605,7 @@
                 if (!_maximized) {
                     ReleaseCapture();
                     SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
-                }
-                else {
+                } else {
                     _headerMouseDown = true;
                 }
             }
@@ -622,8 +621,7 @@
                     // Pass the command as a WM_SYSCOMMAND message
                     SendMessage(Handle, WM_SYSCOMMAND, id, 0);
                 }
-            }
-            else if (m.Msg == WM_NCLBUTTONDOWN) {
+            } else if (m.Msg == WM_NCLBUTTONDOWN) {
                 // This re-enables resizing by letting the application know when the
                 // user is trying to resize a side. This is disabled by default when using WS_SYSMENU.
                 if (!Sizable)
@@ -637,8 +635,7 @@
 
                 if (bFlag != 0)
                     SendMessage(Handle, WM_SYSCOMMAND, 0xF000 | bFlag, (int)m.LParam);
-            }
-            else if (m.Msg == WM_LBUTTONUP) {
+            } else if (m.Msg == WM_LBUTTONUP) {
                 _headerMouseDown = false;
             }
         }
@@ -684,24 +681,19 @@
                 if (e.Location.X < BORDER_WIDTH && e.Location.Y > Height - BORDER_WIDTH && !isChildUnderMouse && !_maximized) {
                     _resizeDir = ResizeDirection.BottomLeft;
                     Cursor = Cursors.SizeNESW;
-                }
-                else if (e.Location.X < BORDER_WIDTH && !isChildUnderMouse && !_maximized) {
+                } else if (e.Location.X < BORDER_WIDTH && !isChildUnderMouse && !_maximized) {
                     _resizeDir = ResizeDirection.Left;
                     Cursor = Cursors.SizeWE;
-                }
-                else if (e.Location.X > Width - BORDER_WIDTH && e.Location.Y > Height - BORDER_WIDTH && !isChildUnderMouse && !_maximized) {
+                } else if (e.Location.X > Width - BORDER_WIDTH && e.Location.Y > Height - BORDER_WIDTH && !isChildUnderMouse && !_maximized) {
                     _resizeDir = ResizeDirection.BottomRight;
                     Cursor = Cursors.SizeNWSE;
-                }
-                else if (e.Location.X > Width - BORDER_WIDTH && !isChildUnderMouse && !_maximized) {
+                } else if (e.Location.X > Width - BORDER_WIDTH && !isChildUnderMouse && !_maximized) {
                     _resizeDir = ResizeDirection.Right;
                     Cursor = Cursors.SizeWE;
-                }
-                else if (e.Location.Y > Height - BORDER_WIDTH && !isChildUnderMouse && !_maximized) {
+                } else if (e.Location.Y > Height - BORDER_WIDTH && !isChildUnderMouse && !_maximized) {
                     _resizeDir = ResizeDirection.Bottom;
                     Cursor = Cursors.SizeNS;
-                }
-                else {
+                } else {
                     _resizeDir = ResizeDirection.None;
 
                     //Only reset the cursor when needed, this prevents it from flickering when a child control changes the cursor to its own needs
@@ -741,39 +733,30 @@
                     _buttonState = ButtonState.XDown;
                 else
                     _buttonState = ButtonState.None;
-            }
-            else {
+            } else {
                 if (showMin && !showMax && _maxButtonBounds.Contains(e.Location)) {
                     _buttonState = ButtonState.MinOver;
 
                     if (oldState == ButtonState.MinDown && up)
                         WindowState = FormWindowState.Minimized;
-                }
-                else if (showMin && showMax && _minButtonBounds.Contains(e.Location)) {
+                } else if (showMin && showMax && _minButtonBounds.Contains(e.Location)) {
                     _buttonState = ButtonState.MinOver;
 
                     if (oldState == ButtonState.MinDown && up)
                         WindowState = FormWindowState.Minimized;
-                }
-                else if (MaximizeBox && ControlBox && _maxButtonBounds.Contains(e.Location)) {
+                } else if (MaximizeBox && ControlBox && _maxButtonBounds.Contains(e.Location)) {
                     _buttonState = ButtonState.MaxOver;
 
                     if (oldState == ButtonState.MaxDown && up)
                         MaximizeWindow(!_maximized);
-                }
-                else if (ControlBox && _xButtonBounds.Contains(e.Location)) {
+                } else if (ControlBox && _xButtonBounds.Contains(e.Location)) {
                     _buttonState = ButtonState.XOver;
 
                     if (oldState == ButtonState.XDown && up)
                         Close();
-                }
-
-                else if (_drawerButtonBounds.Contains(e.Location))
-                {
+                } else if (_drawerButtonBounds.Contains(e.Location)) {
                     _buttonState = ButtonState.DrawerOver;
-                }
-
-                else
+                } else
                     _buttonState = ButtonState.None;
             }
 
@@ -795,8 +778,7 @@
                 _previousLocation = Location;
                 Size = new Size(monitorInfo.rcWork.Width(), monitorInfo.rcWork.Height());
                 Location = new Point(monitorInfo.rcWork.left, monitorInfo.rcWork.top);
-            }
-            else {
+            } else {
                 Size = _previousSize;
                 Location = _previousLocation;
             }

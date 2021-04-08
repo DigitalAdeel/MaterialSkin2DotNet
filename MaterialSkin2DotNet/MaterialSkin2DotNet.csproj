@@ -7,7 +7,7 @@
     <Copyright>Copyright Digital Adeel © 2020</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/DigitalAdeel/MaterialSkin2DotNet</PackageProjectUrl>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageIcon>nuget_32.png</PackageIcon>
     <RepositoryUrl>https://github.com/DigitalAdeel/MaterialSkin2DotNet</RepositoryUrl>
@@ -35,13 +35,5 @@ Same features mentioned at Leonardo's Repo.</PackageReleaseNotes>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="..\..\..\..\Pictures\nuget_32.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
   </ItemGroup>
 </Project>
