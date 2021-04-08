@@ -765,6 +765,12 @@
                     if (oldState == ButtonState.XDown && up)
                         Close();
                 }
+
+                else if (_drawerButtonBounds.Contains(e.Location))
+                {
+                    _buttonState = ButtonState.DrawerOver;
+                }
+
                 else
                     _buttonState = ButtonState.None;
             }
