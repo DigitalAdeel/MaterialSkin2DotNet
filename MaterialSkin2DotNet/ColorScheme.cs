@@ -9,7 +9,7 @@
 
         public readonly Brush PrimaryBrush, DarkPrimaryBrush, LightPrimaryBrush, AccentBrush, TextBrush;
 
-        public ColorScheme(Primary primary = Primary.Green400, Primary darkPrimary = Primary.Green700, Primary lightPrimary Primary.Green100, Accent accent = Accent.Blue200, TextShade textShade = TextShade.WHITE) {
+        public ColorScheme(Primary primary, Primary darkPrimary, Primary lightPrimary, Accent accent, TextShade textShade) {
             //Color
             PrimaryColor = ((int)primary).ToColor();
             DarkPrimaryColor = ((int)darkPrimary).ToColor();
@@ -32,7 +32,7 @@
             TextBrush = new SolidBrush(TextColor);
         }
 
-        public ColorScheme(Primary primary = Primary.Green400, Primary darkPrimary = Primary.Green700, Primary lightPrimary Primary.Green100, Accent accent = Accent.Blue200, TextShade textShade = TextShade.WHITE) {
+        public ColorScheme(Color primary, Color darkPrimary, Color lightPrimary, Color accent, TextShade textShade) {
             //Color
             PrimaryColor = primary;
             DarkPrimaryColor = darkPrimary;
