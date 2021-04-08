@@ -33,7 +33,7 @@
         // Constructor
         private MaterialSkinManager() {
             Theme = Themes.LIGHT;
-            ColorScheme = new ColorScheme(Primary.Green500, Primary.Green700, Primary.Green100, Accent.Blue200, TextShade.WHITE);
+            ColorScheme = new ColorScheme();
 
             // Create and cache Roboto fonts
             // Thanks https://www.codeproject.com/Articles/42041/How-to-Use-a-Font-Without-Installing-it
