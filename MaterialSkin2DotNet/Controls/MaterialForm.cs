@@ -140,6 +140,7 @@
             MaxOver,
             MinOver,
             XDown,
+            DrawerOver,
             MaxDown,
             MinDown,
             None
@@ -151,6 +152,7 @@
         private Rectangle _maxButtonBounds;
         private Rectangle _xButtonBounds;
         private Rectangle _actionBarBounds;
+        private Rectangle __drawerButtonBounds;
 
         public Rectangle UserArea {
             get {
