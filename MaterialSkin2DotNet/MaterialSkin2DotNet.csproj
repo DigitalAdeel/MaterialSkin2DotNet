@@ -9,7 +9,7 @@
     <PackageProjectUrl>https://github.com/DigitalAdeel/MaterialSkin2DotNet</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageIcon>nuget_icon.png</PackageIcon>
+    <PackageIcon>nuget_icon2.png</PackageIcon>
     <RepositoryUrl>https://github.com/DigitalAdeel/MaterialSkin2DotNet</RepositoryUrl>
     <PackageTags>materialskin, materialui, materialuinet,material,material design,design,net,net framework,winforms,win forms, theme</PackageTags>
     <PackageReleaseNotes>1.0.3
@@ -36,14 +36,11 @@ Same features mentioned at Leonardo's Repo.</PackageReleaseNotes>
 
   <ItemGroup>
     <None Remove="nuget_icon.png" />
-    <None Include="..\..\..\..\Pictures\nuget_icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <None Remove="nuget_icon3.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="nuget_icon.png">
+    <Resource Include="nuget_icon3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
