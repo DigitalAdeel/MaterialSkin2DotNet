@@ -3,21 +3,50 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <Description>Migration of MaterialSkin.2 (Leonardo C Bottaro) from .NET Framework Winforms to .NET Winforms also known as .NET Core Winforms. Minimum supported .NET Version is .NetCore 3.1. Latest .NET 5.0 Preview version is also supported.</Description>
+    <Description>Migration of MaterialSkin.2 (Leonardo C Bottaro) from .NET Framework Winforms to .NET Winforms also known as .NET Core Winforms. Minimum supported .NET Version is .NetCore 3.1. Latest .NET 6.0 Preview version is also supported.</Description>
     <Copyright>Copyright Digital Adeel © 2020</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/DigitalAdeel/MaterialSkin2DotNet</PackageProjectUrl>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageIcon>nuget_32.png</PackageIcon>
+    <PackageIcon>nuget_icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/DigitalAdeel/MaterialSkin2DotNet</RepositoryUrl>
-    <PackageTags>materialskin,materialui,materialuinet</PackageTags>
-    <PackageReleaseNotes>First Ever Release.
+    <PackageTags>materialskin, materialui, materialuinet,material,material design,design,net,net framework,winforms,win forms, theme</PackageTags>
+    <PackageReleaseNotes>1.0.3
+----
+Tabs and Default ColorScheme Properties are added.
+1.0.2
+ ----
+1. ColorScheme's Color Properties are added in MaterialForm, which can be used to change color scheme without building 1st.
+-----
+1.0.1
+-----
+1. 1.0.0 version's requirment was accidently set to .NET 5.0, which is .NET CORE 3.1 Now.
+2. Default Primary Color is Green and Accent Color is now Blue.
+3. Material Card Rectangle is can be filled with Form's backcolor according to Theme.
+------------------
+First Ever Release.
+------------------
 Same features mentioned at Leonardo's Repo.</PackageReleaseNotes>
     <Authors>Digital Adeel, leocb, IgnaceMaes</Authors>
     <Company>Digital Adeel</Company>
     <Owner>Digital Adeel</Owner>
+    <Version>1.0.3</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="nuget_icon.png" />
+    <None Include="..\..\..\..\Pictures\nuget_icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="nuget_icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
