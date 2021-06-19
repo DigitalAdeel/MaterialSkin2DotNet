@@ -6,7 +6,7 @@ Theming .NET WinForms, C# or VB.Net, to Google's Material Design Principles.
 
 # Nuget Package
 
-A nuget package version is available ![here](https://www.nuget.org/packages/MaterialSkin2DotNet/)
+A nuget package version is available [here](https://www.nuget.org/packages/MaterialSkin2DotNet/)
 
 Or simply search for MaterialSkin2DotNet on the **Nuget Package Manager** inside Visual Studio
 
@@ -24,7 +24,7 @@ Actionbar for MaterialSkin
 FormtoManage Bug + Workaround
 ![FormtoManage Bug + Workaround](https://github.com/DigitalAdeel/MaterialSkin2DotNet/blob/master/FormtoManageBug.gif)
 
-For more change notes, visit ![leocb/MaterialSkin](https://github.com/leocb/MaterialSkin/)
+For more change notes, visit [leocb/MaterialSkin](https://github.com/leocb/MaterialSkin/)
 
 1.0.1
 
