@@ -6,7 +6,7 @@ Theming .NET WinForms, C# or VB.Net, to Google's Material Design Principles.
 
 # Nuget Package
 
-A nuget package version is available [here](https://www.nuget.org/packages/MaterialSkin2DotNet/)
+A nuget package version is available ![here](https://www.nuget.org/packages/MaterialSkin2DotNet/)
 
 Or simply search for MaterialSkin2DotNet on the **Nuget Package Manager** inside Visual Studio
 
