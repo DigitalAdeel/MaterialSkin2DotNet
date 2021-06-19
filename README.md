@@ -12,6 +12,20 @@ Or simply search for MaterialSkin2DotNet on the **Nuget Package Manager** inside
 
 # Release Notes
 
+1.1
+---
+Updated upto MaterialSkin.2 versions 2.2.0 + Changes on his repo till 18/06/2021
+Default ColorScheme Properties
+![Default ColorScheme Properties](https://github.com/DigitalAdeel/MaterialSkin2DotNet/blob/master/ColorScheme.gif)
+Change ColorScheme using Properties Tab
+![Change ColorScheme using Properties Tab](https://github.com/DigitalAdeel/MaterialSkin2DotNet/blob/master/ColorSchemeinProperties.gif)
+Actionbar for MaterialSkin
+![Actionbar for MaterialSkin](https://github.com/DigitalAdeel/MaterialSkin2DotNet/blob/master/ActionBar.gif)
+FormtoManage Bug + Workaround
+![FormtoManage Bug + Workaround](https://github.com/DigitalAdeel/MaterialSkin2DotNet/blob/master/FormtoManageBug.gif)
+
+For more changes, visit ![leocb/MaterialSkin](https://github.com/leocb/MaterialSkin/)
+
 1.0.1
 
 ![changes](https://i.ibb.co/0qx3fJ3/changes.png)
