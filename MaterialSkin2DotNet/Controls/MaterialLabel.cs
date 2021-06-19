@@ -65,8 +65,7 @@
                     strSize.Width += 1; // necessary to avoid a bug when autosize = true
                 }
                 return strSize;
-            }
-            else {
+            } else {
                 return proposedSize;
             }
         }

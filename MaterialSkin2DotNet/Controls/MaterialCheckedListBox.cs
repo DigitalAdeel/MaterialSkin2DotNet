@@ -1,12 +1,12 @@
-﻿namespace MaterialSkin2DotNet.Controls {
-
+﻿namespace MaterialSkin2DotNet.Controls
+{
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Drawing;
     using System.Windows.Forms;
 
-    public class MaterialCheckedListBox : Panel, IMaterialControl {
-
+    public class MaterialCheckedListBox : Panel, IMaterialControl
+    {
         [Browsable(false)]
         public int Depth { get; set; }
 
@@ -22,55 +22,66 @@
 
         public ItemsList Items { get; set; }
 
-        public MaterialCheckedListBox() : base() {
+        public MaterialCheckedListBox() : base()
+        {
             this.DoubleBuffered = true;
             this.Items = new ItemsList(this);
             this.AutoScroll = true;
         }
 
-        protected override void OnCreateControl() {
+        protected override void OnCreateControl()
+        {
             base.OnCreateControl();
-            if (DesignMode) {
+            if (DesignMode)
+            {
                 BackColorChanged += (sender, args) => BackColor = Parent.BackColor;
                 BackColor = Parent.BackColor;
             }
-            else {
+            else
+            {
                 BackColorChanged += (sender, args) => BackColor = DrawHelper.BlendColor(Parent.BackColor, SkinManager.BackgroundAlternativeColor, SkinManager.BackgroundAlternativeColor.A);
                 BackColor = DrawHelper.BlendColor(Parent.BackColor, SkinManager.BackgroundAlternativeColor, SkinManager.BackgroundAlternativeColor.A);
             }
         }
 
-        public CheckState GetItemCheckState(int Index) {
+        public CheckState GetItemCheckState(int Index)
+        {
             return Items[Index].CheckState;
         }
 
-        public class ItemsList : List<MaterialSkin2DotNet.Controls.MaterialCheckbox> {
+        public class ItemsList : List<MaterialSkin2DotNet.Controls.MaterialCheckbox>
+        {
             private Panel _parent;
 
-            public ItemsList(Panel parent) {
+            public ItemsList(Panel parent)
+            {
                 _parent = parent;
             }
 
             public delegate void SelectedIndexChangedEventHandler(int Index);
 
-            public void Add(string text) {
+            public void Add(string text)
+            {
                 Add(text, false);
             }
 
-            public void Add(string text, bool defaultValue) {
+            public void Add(string text, bool defaultValue)
+            {
                 MaterialSkin2DotNet.Controls.MaterialCheckbox cb = new MaterialSkin2DotNet.Controls.MaterialCheckbox();
                 Add(cb);
                 cb.Checked = defaultValue;
                 cb.Text = text;
             }
 
-            public new void Add(MaterialSkin2DotNet.Controls.MaterialCheckbox value) {
+            public new void Add(MaterialSkin2DotNet.Controls.MaterialCheckbox value)
+            {
                 base.Add(value);
                 _parent.Controls.Add(value);
                 value.Dock = DockStyle.Top;
             }
 
-            public new void Remove(MaterialSkin2DotNet.Controls.MaterialCheckbox value) {
+            public new void Remove(MaterialSkin2DotNet.Controls.MaterialCheckbox value)
+            {
                 base.Remove(value);
                 _parent.Controls.Remove(value);
             }

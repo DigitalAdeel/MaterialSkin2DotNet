@@ -1,12 +1,12 @@
-﻿namespace MaterialSkin2DotNet.Controls {
-
+﻿namespace MaterialSkin2DotNet.Controls
+{
     using System;
     using System.ComponentModel;
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
 
-    public class MaterialMultiLineTextBox : RichTextBox, IMaterialControl {
-
+    public class MaterialMultiLineTextBox : RichTextBox, IMaterialControl
+    {
         //Properties for managing the material design properties
         [Browsable(false)]
         public int Depth { get; set; }
@@ -30,28 +30,36 @@
 
         private string hint = string.Empty;
 
-        public string Hint {
+        [Category("Material Skin"), DefaultValue(""), Localizable(true)]
+        public string Hint
+        {
             get { return hint; }
-            set {
+            set
+            {
                 hint = value;
                 SendMessage(Handle, EM_SETCUEBANNER, (int)IntPtr.Zero, Hint);
             }
         }
 
-        public new void SelectAll() {
-            BeginInvoke((MethodInvoker)delegate () {
+        public new void SelectAll()
+        {
+            BeginInvoke((MethodInvoker)delegate ()
+            {
                 base.Focus();
                 base.SelectAll();
             });
         }
 
-        public new void Focus() {
-            BeginInvoke((MethodInvoker)delegate () {
+        public new void Focus()
+        {
+            BeginInvoke((MethodInvoker)delegate ()
+            {
                 base.Focus();
             });
         }
 
-        public MaterialMultiLineTextBox() {
+        public MaterialMultiLineTextBox()
+        {
             base.OnCreateControl();
             this.Multiline = true;
 

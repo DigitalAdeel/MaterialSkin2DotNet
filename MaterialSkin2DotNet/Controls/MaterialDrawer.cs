@@ -1,5 +1,5 @@
-﻿namespace MaterialSkin2DotNet.Controls {
-
+﻿namespace MaterialSkin2DotNet.Controls
+{
     using MaterialSkin2DotNet.Animations;
     using System;
     using System.Collections.Generic;
@@ -10,18 +10,23 @@
     using System.Drawing.Text;
     using System.Windows.Forms;
 
-    public class MaterialDrawer : Control, IMaterialControl {
+    public class MaterialDrawer : Control, IMaterialControl
+    {
         // TODO: Invalidate when changing custom properties
 
         private bool _showIconsWhenHidden;
 
         [Category("Drawer")]
-        public bool ShowIconsWhenHidden {
-            get {
+        public bool ShowIconsWhenHidden
+        {
+            get
+            {
                 return _showIconsWhenHidden;
             }
-            set {
-                if (_showIconsWhenHidden != value) {
+            set
+            {
+                if (_showIconsWhenHidden != value)
+                {
                     _showIconsWhenHidden = value;
                     UpdateTabRects();
                     preProcessIcons();
@@ -35,11 +40,14 @@
         private bool _isOpen;
 
         [Category("Drawer")]
-        public bool IsOpen {
-            get {
+        public bool IsOpen
+        {
+            get
+            {
                 return _isOpen;
             }
-            set {
+            set
+            {
                 _isOpen = value;
                 if (value)
                     Show();
@@ -52,13 +60,19 @@
         public bool AutoHide { get; set; }
 
         [Category("Drawer")]
+        public bool AutoShow { get; set; }
+
+        [Category("Drawer")]
         private bool _useColors;
 
-        public bool UseColors {
-            get {
+        public bool UseColors
+        {
+            get
+            {
                 return _useColors;
             }
-            set {
+            set
+            {
                 _useColors = value;
                 preProcessIcons();
                 Invalidate();
@@ -68,11 +82,14 @@
         [Category("Drawer")]
         private bool _highlightWithAccent;
 
-        public bool HighlightWithAccent {
-            get {
+        public bool HighlightWithAccent
+        {
+            get
+            {
                 return _highlightWithAccent;
             }
-            set {
+            set
+            {
                 _highlightWithAccent = value;
                 preProcessIcons();
                 Invalidate();
@@ -82,11 +99,14 @@
         [Category("Drawer")]
         private bool _backgroundWithAccent;
 
-        public bool BackgroundWithAccent {
-            get {
+        public bool BackgroundWithAccent
+        {
+            get
+            {
                 return _backgroundWithAccent;
             }
-            set {
+            set
+            {
                 _backgroundWithAccent = value;
                 Invalidate();
             }
@@ -130,9 +150,11 @@
         private MaterialTabControl _baseTabControl;
 
         [Category("Behavior")]
-        public MaterialTabControl BaseTabControl {
+        public MaterialTabControl BaseTabControl
+        {
             get { return _baseTabControl; }
-            set {
+            set
+            {
                 _baseTabControl = value;
                 if (_baseTabControl == null)
                     return;
@@ -143,23 +165,28 @@
                 // Other helpers
 
                 _previousSelectedTabIndex = _baseTabControl.SelectedIndex;
-                _baseTabControl.Deselected += (sender, args) => {
+                _baseTabControl.Deselected += (sender, args) =>
+                {
                     _previousSelectedTabIndex = _baseTabControl.SelectedIndex;
                 };
-                _baseTabControl.SelectedIndexChanged += (sender, args) => {
+                _baseTabControl.SelectedIndexChanged += (sender, args) =>
+                {
                     _clickAnimManager.SetProgress(0);
                     _clickAnimManager.StartNewAnimation(AnimationDirection.In);
                 };
-                _baseTabControl.ControlAdded += delegate {
+                _baseTabControl.ControlAdded += delegate
+                {
                     Invalidate();
                 };
-                _baseTabControl.ControlRemoved += delegate {
+                _baseTabControl.ControlRemoved += delegate
+                {
                     Invalidate();
                 };
             }
         }
 
-        private void preProcessIcons() {
+        private void preProcessIcons()
+        {
             // pre-process and pre-allocate texture brushes (icons)
             if (_baseTabControl == null || _baseTabControl.TabCount == 0 || _baseTabControl.ImageList == null || _drawerItemRects == null || _drawerItemRects.Count == 0)
                 return;
@@ -200,7 +227,8 @@
             iconsSelectedBrushes = new Dictionary<string, TextureBrush>(_baseTabControl.TabPages.Count);
             iconsSize = new Dictionary<string, Rectangle>(_baseTabControl.TabPages.Count);
 
-            foreach (TabPage tabPage in _baseTabControl.TabPages) {
+            foreach (TabPage tabPage in _baseTabControl.TabPages)
+            {
                 // skip items without image
                 if (String.IsNullOrEmpty(tabPage.ImageKey) || _drawerItemRects == null)
                     continue;
@@ -210,7 +238,8 @@
 
                 // Create a pre-processed copy of the image (GRAY)
                 Bitmap bgray = new Bitmap(destRect.Width, destRect.Height);
-                using (Graphics gGray = Graphics.FromImage(bgray)) {
+                using (Graphics gGray = Graphics.FromImage(bgray))
+                {
                     gGray.DrawImage(_baseTabControl.ImageList.Images[tabPage.ImageKey],
                         new Point[] {
                                 new Point(0, 0),
@@ -222,7 +251,8 @@
 
                 // Create a pre-processed copy of the image (PRIMARY COLOR)
                 Bitmap bcolor = new Bitmap(destRect.Width, destRect.Height);
-                using (Graphics gColor = Graphics.FromImage(bcolor)) {
+                using (Graphics gColor = Graphics.FromImage(bcolor))
+                {
                     gColor.DrawImage(_baseTabControl.ImageList.Images[tabPage.ImageKey],
                         new Point[] {
                                 new Point(0, 0),
@@ -276,7 +306,8 @@
 
         public int MinWidth;
 
-        public MaterialDrawer() {
+        public MaterialDrawer()
+        {
             SetStyle(ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             Height = 120;
             Width = 250;
@@ -284,37 +315,46 @@
             _isOpen = true;
             ShowIconsWhenHidden = false;
             AutoHide = false;
+            AutoShow = false;
             HighlightWithAccent = true;
             BackgroundWithAccent = false;
 
-            _showHideAnimManager = new AnimationManager {
+            _showHideAnimManager = new AnimationManager
+            {
                 AnimationType = AnimationType.EaseInOut,
                 Increment = 0.04
             };
-            _showHideAnimManager.OnAnimationProgress += sender => {
+            _showHideAnimManager.OnAnimationProgress += sender =>
+            {
                 Invalidate();
                 showHideAnimation();
             };
-            _showHideAnimManager.OnAnimationFinished += sender => {
+            _showHideAnimManager.OnAnimationFinished += sender =>
+            {
                 if (_baseTabControl != null && _drawerItemRects.Count > 0)
                     rippleSize = _drawerItemRects[_baseTabControl.SelectedIndex].Width;
-                if (_isOpen) {
+                if (_isOpen)
+                {
                     DrawerEndOpen?.Invoke(this);
                 }
-                else {
+                else
+                {
                     DrawerEndClose?.Invoke(this);
                 }
             };
 
-            SkinManager.ColorSchemeChanged += sender => {
+            SkinManager.ColorSchemeChanged += sender =>
+            {
                 preProcessIcons();
             };
 
-            SkinManager.ThemeChanged += sender => {
+            SkinManager.ThemeChanged += sender =>
+            {
                 preProcessIcons();
             };
 
-            _clickAnimManager = new AnimationManager {
+            _clickAnimManager = new AnimationManager
+            {
                 AnimationType = AnimationType.EaseOut,
                 Increment = 0.04
             };
@@ -322,7 +362,8 @@
         }
 
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        protected override void InitLayout() {
+        protected override void InitLayout()
+        {
             drawerItemHeight = TAB_HEADER_PADDING * 2 - SkinManager.FORM_PADDING / 2;
             MinWidth = (int)(SkinManager.FORM_PADDING * 1.5 + drawerItemHeight);
             _showHideAnimManager.SetProgress(_isOpen ? 0 : 1);
@@ -332,25 +373,34 @@
             base.InitLayout();
         }
 
-        private void showHideAnimation() {
+        private void showHideAnimation()
+        {
             var showHideAnimProgress = _showHideAnimManager.GetProgress();
-            if (_showHideAnimManager.IsAnimating()) {
-                if (ShowIconsWhenHidden) {
+            if (_showHideAnimManager.IsAnimating())
+            {
+                if (ShowIconsWhenHidden)
+                {
                     Location = new Point((int)((-Width + MinWidth) * showHideAnimProgress), Location.Y);
                 }
-                else {
+                else
+                {
                     Location = new Point((int)(-Width * showHideAnimProgress), Location.Y);
                 }
             }
-            else {
-                if (_isOpen) {
+            else
+            {
+                if (_isOpen)
+                {
                     Location = new Point(0, Location.Y);
                 }
-                else {
-                    if (ShowIconsWhenHidden) {
+                else
+                {
+                    if (ShowIconsWhenHidden)
+                    {
                         Location = new Point((int)(-Width + MinWidth), Location.Y);
                     }
-                    else {
+                    else
+                    {
                         Location = new Point(-Width, Location.Y);
                     }
                 }
@@ -358,11 +408,13 @@
             UpdateTabRects();
         }
 
-        protected override void OnPaint(PaintEventArgs e) {
+        protected override void OnPaint(PaintEventArgs e)
+        {
             Paint(e);
         }
 
-        private new void Paint(PaintEventArgs e) {
+        private new void Paint(PaintEventArgs e)
+        {
             var g = e.Graphics;
             g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 
@@ -388,7 +440,8 @@
             prevLocation = Location.X;
 
             // Ripple
-            if (_clickAnimManager.IsAnimating()) {
+            if (_clickAnimManager.IsAnimating())
+            {
                 var rippleBrush = new SolidBrush(Color.FromArgb((int)(70 - (clickAnimProgress * 70)),
                     UseColors ? SkinManager.ColorScheme.AccentColor : // Using colors
                     SkinManager.Theme == MaterialSkinManager.Themes.LIGHT ? SkinManager.ColorScheme.PrimaryColor : // light theme
@@ -401,7 +454,8 @@
             }
 
             // Draw menu items
-            foreach (TabPage tabPage in _baseTabControl.TabPages) {
+            foreach (TabPage tabPage in _baseTabControl.TabPages)
+            {
                 var currentTabIndex = _baseTabControl.TabPages.IndexOf(tabPage);
 
                 // Background
@@ -426,18 +480,21 @@
                 textRect.X += _baseTabControl.ImageList != null ? drawerItemHeight : (int)(SkinManager.FORM_PADDING * 0.75);
                 textRect.Width -= SkinManager.FORM_PADDING << 2;
 
-                using (NativeTextRenderer NativeText = new NativeTextRenderer(g)) {
+                using (NativeTextRenderer NativeText = new NativeTextRenderer(g))
+                {
                     NativeText.DrawTransparentText(tabPage.Text, textFont, textColor, textRect.Location, textRect.Size, NativeTextRenderer.TextAlignFlags.Left | NativeTextRenderer.TextAlignFlags.Middle);
                 }
 
                 // Icons
-                if (_baseTabControl.ImageList != null && !String.IsNullOrEmpty(tabPage.ImageKey)) {
+                if (_baseTabControl.ImageList != null && !String.IsNullOrEmpty(tabPage.ImageKey))
+                {
                     Rectangle iconRect = new Rectangle(
                         _drawerItemRects[currentTabIndex].X + (drawerItemHeight >> 1) - (iconsSize[tabPage.ImageKey].Width >> 1),
                         _drawerItemRects[currentTabIndex].Y + (drawerItemHeight >> 1) - (iconsSize[tabPage.ImageKey].Height >> 1),
                         iconsSize[tabPage.ImageKey].Width, iconsSize[tabPage.ImageKey].Height);
 
-                    if (ShowIconsWhenHidden) {
+                    if (ShowIconsWhenHidden)
+                    {
                         iconsBrushes[tabPage.ImageKey].TranslateTransform(dx, 0);
                         iconsSelectedBrushes[tabPage.ImageKey].TranslateTransform(dx, 0);
                     }
@@ -447,8 +504,10 @@
             }
 
             // Draw divider if not using colors
-            if (!UseColors) {
-                using (Pen dividerPen = new Pen(SkinManager.DividersColor, 1)) {
+            if (!UseColors)
+            {
+                using (Pen dividerPen = new Pen(SkinManager.DividersColor, 1))
+                {
                     g.DrawLine(dividerPen, Width - 1, 0, Width - 1, Height);
                 }
             }
@@ -465,70 +524,85 @@
             g.FillRectangle(SkinManager.ColorScheme.AccentBrush, x, y, IndicatorWidth, height);
         }
 
-        public new void Show() {
+        public new void Show()
+        {
             _isOpen = true;
             DrawerStateChanged?.Invoke(this);
             DrawerBeginOpen?.Invoke(this);
             _showHideAnimManager.StartNewAnimation(AnimationDirection.Out);
         }
 
-        public new void Hide() {
+        public new void Hide()
+        {
             _isOpen = false;
             DrawerStateChanged?.Invoke(this);
             DrawerBeginClose?.Invoke(this);
             _showHideAnimManager.StartNewAnimation(AnimationDirection.In);
         }
 
-        public void Toggle() {
+        public void Toggle()
+        {
             if (_isOpen)
                 Hide();
             else
                 Show();
         }
 
-        private int CalculateAlphaZeroWhenClosed(int primaryA, int secondaryA, int tabIndex, double clickAnimProgress, double showHideAnimProgress) {
+        private int CalculateAlphaZeroWhenClosed(int primaryA, int secondaryA, int tabIndex, double clickAnimProgress, double showHideAnimProgress)
+        {
             // Drawer is closed
-            if (!_isOpen && !_showHideAnimManager.IsAnimating()) {
+            if (!_isOpen && !_showHideAnimManager.IsAnimating())
+            {
                 return 0;
             }
             // Active menu (no change)
-            if (tabIndex == _baseTabControl.SelectedIndex && (!_clickAnimManager.IsAnimating() || _showHideAnimManager.IsAnimating())) {
+            if (tabIndex == _baseTabControl.SelectedIndex && (!_clickAnimManager.IsAnimating() || _showHideAnimManager.IsAnimating()))
+            {
                 return (int)(primaryA * showHideAnimProgress);
             }
             // Previous menu (changing)
-            if (tabIndex == _previousSelectedTabIndex && !_showHideAnimManager.IsAnimating()) {
+            if (tabIndex == _previousSelectedTabIndex && !_showHideAnimManager.IsAnimating())
+            {
                 return primaryA - (int)((primaryA - secondaryA) * clickAnimProgress);
             }
             // Inactive menu (no change)
-            if (tabIndex != _baseTabControl.SelectedIndex) {
+            if (tabIndex != _baseTabControl.SelectedIndex)
+            {
                 return (int)(secondaryA * showHideAnimProgress);
             }
             // Active menu (changing)
             return secondaryA + (int)((primaryA - secondaryA) * clickAnimProgress);
         }
 
-        private int CalculateAlpha(int primaryA, int secondaryA, int tabIndex, double clickAnimProgress, double showHideAnimProgress) {
-            if (tabIndex == _baseTabControl.SelectedIndex && !_clickAnimManager.IsAnimating()) {
+        private int CalculateAlpha(int primaryA, int secondaryA, int tabIndex, double clickAnimProgress, double showHideAnimProgress)
+        {
+            if (tabIndex == _baseTabControl.SelectedIndex && !_clickAnimManager.IsAnimating())
+            {
                 return (int)(primaryA);
             }
-            if (tabIndex != _previousSelectedTabIndex && tabIndex != _baseTabControl.SelectedIndex) {
+            if (tabIndex != _previousSelectedTabIndex && tabIndex != _baseTabControl.SelectedIndex)
+            {
                 return secondaryA;
             }
-            if (tabIndex == _previousSelectedTabIndex) {
+            if (tabIndex == _previousSelectedTabIndex)
+            {
                 return primaryA - (int)((primaryA - secondaryA) * clickAnimProgress);
             }
             return secondaryA + (int)((primaryA - secondaryA) * clickAnimProgress);
         }
 
-        protected override void OnMouseClick(MouseEventArgs e) {
+        protected override void OnMouseClick(MouseEventArgs e)
+        {
             base.OnMouseClick(e);
 
             if (_drawerItemRects == null)
                 UpdateTabRects();
-            for (var i = 0; i < _drawerItemRects.Count; i++) {
-                if (_drawerItemRects[i].Contains(e.Location)) {
+            for (var i = 0; i < _drawerItemRects.Count; i++)
+            {
+                if (_drawerItemRects[i].Contains(e.Location))
+                {
                     _baseTabControl.SelectedIndex = i;
-                    if (AutoHide)
+                    if (AutoHide && !AutoShow)
                         Hide();
                 }
             }
@@ -536,7 +610,22 @@
             _animationSource = e.Location;
         }
 
-        protected override void OnMouseMove(MouseEventArgs e) {
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+            if (DesignMode)
+                return;
+        }
+
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+            if (DesignMode)
+                return;
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
             base.OnMouseMove(e);
 
             if (DesignMode)
@@ -544,36 +633,64 @@
 
             if (_drawerItemRects == null)
                 UpdateTabRects();
-            for (var i = 0; i < _drawerItemRects.Count; i++) {
-                if (_drawerItemRects[i].Contains(e.Location)) {
+            for (var i = 0; i < _drawerItemRects.Count; i++)
+            {
+                if (_drawerItemRects[i].Contains(e.Location))
+                {
                     Cursor = Cursors.Hand;
                     return;
                 }
             }
-            Cursor = Cursors.Arrow;
+            //Cursor = Cursors.Arrow;
         }
 
-        private void UpdateTabRects() {
+        protected override void OnMouseEnter(EventArgs e)
+        {
+            base.OnMouseEnter(e);
+            if (AutoShow && _isOpen==false)
+            {
+                Show();
+            }
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            base.OnMouseLeave(e);
+            if (AutoShow)
+            {
+                if (DisplayRectangle.Contains(Control.MousePosition) == false)
+                {
+                    Hide();
+                }
+            }
+        }
+
+        private void UpdateTabRects()
+        {
             //If there isn't a base tab control, the rects shouldn't be calculated
             //or if there aren't tab pages in the base tab control, the list should just be empty
-            if (_baseTabControl == null || _baseTabControl.TabCount == 0 || SkinManager == null || _drawerItemRects == null) {
+            if (_baseTabControl == null || _baseTabControl.TabCount == 0 || SkinManager == null || _drawerItemRects == null)
+            {
                 _drawerItemRects = new List<Rectangle>();
                 _drawerItemPaths = new List<GraphicsPath>();
                 return;
             }
 
-            if (_drawerItemRects.Count != _baseTabControl.TabCount) {
+            if (_drawerItemRects.Count != _baseTabControl.TabCount)
+            {
                 _drawerItemRects = new List<Rectangle>(_baseTabControl.TabCount);
                 _drawerItemPaths = new List<GraphicsPath>(_baseTabControl.TabCount);
 
-                for (var i = 0; i < _baseTabControl.TabCount; i++) {
+                for (var i = 0; i < _baseTabControl.TabCount; i++)
+                {
                     _drawerItemRects.Add(new Rectangle());
                     _drawerItemPaths.Add(new GraphicsPath());
                 }
             }
 
             //Calculate the bounds of each tab header specified in the base tab control
-            for (int i = 0; i < _baseTabControl.TabPages.Count; i++) {
+            for (int i = 0; i < _baseTabControl.TabPages.Count; i++)
+            {
                 _drawerItemRects[i] = (new Rectangle(
                     (int)(SkinManager.FORM_PADDING * 0.75) - (ShowIconsWhenHidden ? Location.X : 0),
                     (TAB_HEADER_PADDING * 2) * i + (int)(SkinManager.FORM_PADDING >> 1),

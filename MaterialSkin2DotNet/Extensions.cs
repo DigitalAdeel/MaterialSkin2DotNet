@@ -1,4 +1,4 @@
-﻿namespace MaterialSkin2DotNet {
+﻿namespace MaterialSkin2DotNet  {
 
     using System;
     using System.Drawing;
@@ -21,8 +21,7 @@
                 var type = objectToCheck.GetType();
 
                 return type.GetProperty(propertyName) != null;
-            }
-            catch (AmbiguousMatchException) {
+            } catch (AmbiguousMatchException) {
                 // ambiguous means there is more than one result,
                 // which means: a method with that name does exist
                 return true;
@@ -37,8 +36,7 @@
         public static bool IsMaterialControl(this Object obj) {
             if (obj is IMaterialControl) {
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         }

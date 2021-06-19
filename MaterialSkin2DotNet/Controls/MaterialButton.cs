@@ -5,6 +5,7 @@
     using System.ComponentModel;
     using System.Drawing;
     using System.Drawing.Drawing2D;
+    using System.Drawing.Imaging;
     using System.Drawing.Text;
     using System.Windows.Forms;
 
@@ -12,6 +13,14 @@
     /// Defines the <see cref="MaterialButton" />
     /// </summary>
     public class MaterialButton : Button, IMaterialControl {
+        private const int ICON_SIZE = 24;
+        private const int MINIMUMWIDTH = 64;
+        private const int MINIMUMWIDTHICONONLY = 36; //64;
+        private const int HEIGHTDEFAULT = 36;
+        private const int HEIGHTDENSE = 32;
+
+        // icons
+        private TextureBrush iconsBrushes;
 
         /// <summary>
         /// Gets or sets the Depth
@@ -37,11 +46,18 @@
             Contained
         }
 
+        public enum MaterialButtonDensity {
+            Default,
+            Dense
+        }
+
+        [Category("Material Skin")]
         public bool UseAccentColor {
             get { return useAccentColor; }
             set { useAccentColor = value; Invalidate(); }
         }
 
+        [Category("Material Skin")]
         /// <summary>
         /// Gets or sets a value indicating whether HighEmphasis
         /// </summary>
@@ -50,17 +66,34 @@
             set { highEmphasis = value; Invalidate(); }
         }
 
+        [DefaultValue(true)]
+        [Category("Material Skin")]
+        [Description("Draw Shadows around control")]
         public bool DrawShadows {
             get { return drawShadows; }
             set { drawShadows = value; Invalidate(); }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether HighEmphasis
-        /// </summary>
+        [Category("Material Skin")]
         public MaterialButtonType Type {
             get { return type; }
-            set { type = value; Invalidate(); }
+            set { type = value; preProcessIcons(); Invalidate(); }
+        }
+
+        [Category("Material Skin")]
+        /// <summary>
+        /// Gets or sets a value indicating button density
+        /// </summary>
+        public MaterialButtonDensity Density {
+            get { return _density; }
+            set {
+                _density = value;
+                if (_density == MaterialButtonDensity.Dense)
+                    Size = new Size(Size.Width, HEIGHTDENSE);
+                else
+                    Size = new Size(Size.Width, HEIGHTDEFAULT);
+                Invalidate();
+            }
         }
 
         protected override void InitLayout() {
@@ -85,6 +118,11 @@
                 AddShadowPaintEvent(Parent, drawShadowOnParent);
             else
                 RemoveShadowPaintEvent(Parent, drawShadowOnParent);
+        }
+
+        protected override void OnEnabledChanged(EventArgs e) {
+            base.OnEnabledChanged(e);
+            Invalidate();
         }
 
         private bool _shadowDrawEventSubscribed = false;
@@ -120,7 +158,9 @@
         private bool highEmphasis;
         private bool useAccentColor;
         private MaterialButtonType type;
+        private MaterialButtonDensity _density;
 
+        [Category("Material Skin")]
         /// <summary>
         /// Gets or sets the Icon
         /// </summary>
@@ -128,6 +168,8 @@
             get { return _icon; }
             set {
                 _icon = value;
+                preProcessIcons();
+
                 if (AutoSize) {
                     Refresh();
                 }
@@ -150,6 +192,7 @@
             HighEmphasis = true;
             UseAccentColor = false;
             Type = MaterialButtonType.Contained;
+            Density = MaterialButtonDensity.Default;
 
             _animationManager = new AnimationManager(false) {
                 Increment = 0.03,
@@ -158,6 +201,13 @@
             _hoverAnimationManager = new AnimationManager {
                 Increment = 0.12,
                 AnimationType = AnimationType.Linear
+            };
+            SkinManager.ColorSchemeChanged += sender => {
+                preProcessIcons();
+            };
+
+            SkinManager.ThemeChanged += sender => {
+                preProcessIcons();
             };
 
             _hoverAnimationManager.OnAnimationProgress += sender => Invalidate();
@@ -198,6 +248,84 @@
             Rectangle rect = new Rectangle(Location, ClientRectangle.Size);
             gp.SmoothingMode = SmoothingMode.AntiAlias;
             DrawHelper.DrawSquareShadow(gp, rect);
+        }
+
+        private void preProcessIcons() {
+            if (Icon == null) return;
+
+            int newWidth, newHeight;
+            //Resize icon if greater than ICON_SIZE
+            if (Icon.Width > ICON_SIZE || Icon.Height > ICON_SIZE) {
+                //calculate aspect ratio
+                float aspect = Icon.Width / (float)Icon.Height;
+
+                //calculate new dimensions based on aspect ratio
+                newWidth = (int)(ICON_SIZE * aspect);
+                newHeight = (int)(newWidth / aspect);
+
+                //if one of the two dimensions exceed the box dimensions
+                if (newWidth > ICON_SIZE || newHeight > ICON_SIZE) {
+                    //depending on which of the two exceeds the box dimensions set it as the box dimension and calculate the other one based on the aspect ratio
+                    if (newWidth > newHeight) {
+                        newWidth = ICON_SIZE;
+                        newHeight = (int)(newWidth / aspect);
+                    } else {
+                        newHeight = ICON_SIZE;
+                        newWidth = (int)(newHeight * aspect);
+                    }
+                }
+            } else {
+                newWidth = Icon.Width;
+                newHeight = Icon.Height;
+            }
+
+            Bitmap IconResized = new Bitmap(Icon, newWidth, newHeight);
+
+            // Calculate lightness and color
+            float l = (SkinManager.Theme == MaterialSkinManager.Themes.LIGHT & (highEmphasis == false | Enabled == false | Type != MaterialButtonType.Contained)) ? 0f : 1.5f;
+
+            // Create matrices
+            float[][] matrixGray = {
+                    new float[] {   0,   0,   0,   0,  0}, // Red scale factor
+                    new float[] {   0,   0,   0,   0,  0}, // Green scale factor
+                    new float[] {   0,   0,   0,   0,  0}, // Blue scale factor
+                    new float[] {   0,   0,   0, Enabled ? .7f : .3f,  0}, // alpha scale factor
+                    new float[] {   l,   l,   l,   0,  1}};// offset
+
+            ColorMatrix colorMatrixGray = new ColorMatrix(matrixGray);
+
+            ImageAttributes grayImageAttributes = new ImageAttributes();
+
+            // Set color matrices
+            grayImageAttributes.SetColorMatrix(colorMatrixGray, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+
+            // Image Rect
+            Rectangle destRect = new Rectangle(0, 0, ICON_SIZE, ICON_SIZE);
+
+            // Create a pre-processed copy of the image (GRAY)
+            Bitmap bgray = new Bitmap(destRect.Width, destRect.Height);
+            using (Graphics gGray = Graphics.FromImage(bgray)) {
+                gGray.DrawImage(IconResized,
+                    new Point[] {
+                                new Point(0, 0),
+                                new Point(destRect.Width, 0),
+                                new Point(0, destRect.Height),
+                    },
+                    destRect, GraphicsUnit.Pixel, grayImageAttributes);
+            }
+
+            // added processed image to brush for drawing
+            TextureBrush textureBrushGray = new TextureBrush(bgray);
+
+            textureBrushGray.WrapMode = System.Drawing.Drawing2D.WrapMode.Clamp;
+
+            // Translate the brushes to the correct positions
+            var iconRect = new Rectangle(8, 6, ICON_SIZE, ICON_SIZE);
+
+            textureBrushGray.TranslateTransform(iconRect.X + iconRect.Width / 2 - IconResized.Width / 2,
+                                                iconRect.Y + iconRect.Height / 2 - IconResized.Height / 2);
+
+            iconsBrushes = textureBrushGray;
         }
 
         /// <summary>
@@ -241,14 +369,13 @@
                         g.FillPath(normalBrush, buttonPath);
                     }
                 }
-            }
-            else {
+            } else {
                 g.Clear(Parent.BackColor);
             }
 
             //Hover
             using (SolidBrush hoverBrush = new SolidBrush(Color.FromArgb(
-                (int)(hoverAnimProgress * SkinManager.BackgroundFocusColor.A), (UseAccentColor ? (HighEmphasis && Type == MaterialButtonType.Contained ?
+                (int)(HighEmphasis && Type == MaterialButtonType.Contained ? hoverAnimProgress * 80 : hoverAnimProgress * SkinManager.BackgroundFocusColor.A), (UseAccentColor ? (HighEmphasis && Type == MaterialButtonType.Contained ?
                 SkinManager.ColorScheme.AccentColor.Lighten(0.5f) : // Contained with Emphasis - with accent
                 SkinManager.ColorScheme.AccentColor) : // Not Contained Or Low Emphasis - with accent
                 (Type == MaterialButtonType.Contained && HighEmphasis ? SkinManager.ColorScheme.LightPrimaryColor : // Contained with Emphasis without accent
@@ -288,7 +415,7 @@
             }
 
             //Icon
-            var iconRect = new Rectangle(8, 6, 24, 24);
+            var iconRect = new Rectangle(8, 6, ICON_SIZE, ICON_SIZE);
 
             if (string.IsNullOrEmpty(Text)) {
                 // Center Icon
@@ -296,25 +423,25 @@
             }
 
             if (Icon != null) {
-                g.DrawImage(Icon, iconRect);
+                g.FillRectangle(iconsBrushes, iconRect);
             }
 
             //Text
             var textRect = ClientRectangle;
             if (Icon != null) {
-                textRect.Width -= 8 + 24 + 4 + 8; // left padding + icon width + space between Icon and Text + right padding
-                textRect.X += 8 + 24 + 4; // left padding + icon width + space between Icon and Text
+                textRect.Width -= 8 + ICON_SIZE + 4 + 8; // left padding + icon width + space between Icon and Text + right padding
+                textRect.X += 8 + ICON_SIZE + 4; // left padding + icon width + space between Icon and Text
             }
 
             Color textColor = Enabled ? (HighEmphasis ? (Type == MaterialButtonType.Text || Type == MaterialButtonType.Outlined) ?
                 (UseAccentColor ? SkinManager.ColorScheme.AccentColor : // Outline or Text and accent and emphasis
-                SkinManager.ColorScheme.PrimaryColor) : // Outline or Text and emphasis
+                SkinManager.Theme == MaterialSkin2DotNet.MaterialSkinManager.Themes.LIGHT ? SkinManager.ColorScheme.PrimaryColor : SkinManager.ColorScheme.LightPrimaryColor) : // Outline or Text and emphasis
                 SkinManager.ColorScheme.TextColor : // Contained and Emphasis
                 SkinManager.TextHighEmphasisColor) : // Cointained and accent
                 SkinManager.TextDisabledOrHintColor; // Disabled
 
             using (NativeTextRenderer NativeText = new NativeTextRenderer(g)) {
-                NativeText.DrawTransparentText(Text.ToUpper(), SkinManager.getLogFontByType(MaterialSkinManager.fontType.Button),
+                NativeText.DrawMultilineTransparentText(Text.ToUpper(), SkinManager.getLogFontByType(MaterialSkinManager.fontType.Button),
                     textColor,
                     textRect.Location,
                     textRect.Size,
@@ -344,18 +471,19 @@
             if (Icon != null) {
                 // 24 is for icon size
                 // 4 is for the space between icon & text
-                extra += 24 + 4;
+                extra += ICON_SIZE + 4;
             }
 
             if (AutoSize) {
                 s.Width = (int)Math.Ceiling(_textSize.Width);
                 s.Width += extra;
-                s.Height = 36;
-            }
-            else {
+                s.Height = HEIGHTDEFAULT;
+            } else {
                 s.Width += extra;
-                s.Height = 36;
+                s.Height = HEIGHTDEFAULT;
             }
+            if (Icon != null && Text.Length == 0 && s.Width < MINIMUMWIDTHICONONLY) s.Width = MINIMUMWIDTHICONONLY;
+            else if (s.Width < MINIMUMWIDTH) s.Width = MINIMUMWIDTH;
 
             return s;
         }
@@ -395,10 +523,11 @@
             };
 
             GotFocus += (sender, args) => {
-                _hoverAnimationManager.StartNewAnimation(AnimationDirection.In);
+                if (MouseState == MouseState.HOVER) _hoverAnimationManager.StartNewAnimation(AnimationDirection.In);
                 Invalidate();
             };
             LostFocus += (sender, args) => {
+                MouseState = MouseState.OUT;
                 _hoverAnimationManager.StartNewAnimation(AnimationDirection.Out);
                 Invalidate();
             };

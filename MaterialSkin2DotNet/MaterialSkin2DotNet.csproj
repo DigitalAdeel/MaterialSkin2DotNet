@@ -36,13 +36,6 @@ Same features mentioned at Leonardo's Repo.</PackageReleaseNotes>
 
   <ItemGroup>
     <None Remove="nuget_icon.png" />
-    <None Remove="nuget_icon3.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="nuget_icon3.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
   </ItemGroup>
 
   <ItemGroup>
@@ -54,9 +47,6 @@ Same features mentioned at Leonardo's Repo.</PackageReleaseNotes>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Controls\FlexibleMaterialForm.resx">
-      <Generator></Generator>
-    </EmbeddedResource>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

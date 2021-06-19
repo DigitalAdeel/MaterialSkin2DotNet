@@ -129,31 +129,25 @@
                 if (!Singular) {
                     if ((_animationDirections[i] == AnimationDirection.InOutIn && _animationProgresses[i] == MAX_VALUE)) {
                         _animationDirections[i] = AnimationDirection.InOutOut;
-                    }
-                    else if ((_animationDirections[i] == AnimationDirection.InOutRepeatingIn && _animationProgresses[i] == MIN_VALUE)) {
+                    } else if ((_animationDirections[i] == AnimationDirection.InOutRepeatingIn && _animationProgresses[i] == MIN_VALUE)) {
                         _animationDirections[i] = AnimationDirection.InOutRepeatingOut;
-                    }
-                    else if ((_animationDirections[i] == AnimationDirection.InOutRepeatingOut && _animationProgresses[i] == MIN_VALUE)) {
+                    } else if ((_animationDirections[i] == AnimationDirection.InOutRepeatingOut && _animationProgresses[i] == MIN_VALUE)) {
                         _animationDirections[i] = AnimationDirection.InOutRepeatingIn;
-                    }
-                    else if (
-                        (_animationDirections[i] == AnimationDirection.In && _animationProgresses[i] == MAX_VALUE) ||
-                        (_animationDirections[i] == AnimationDirection.Out && _animationProgresses[i] == MIN_VALUE) ||
-                        (_animationDirections[i] == AnimationDirection.InOutOut && _animationProgresses[i] == MIN_VALUE)) {
+                    } else if (
+                          (_animationDirections[i] == AnimationDirection.In && _animationProgresses[i] == MAX_VALUE) ||
+                          (_animationDirections[i] == AnimationDirection.Out && _animationProgresses[i] == MIN_VALUE) ||
+                          (_animationDirections[i] == AnimationDirection.InOutOut && _animationProgresses[i] == MIN_VALUE)) {
                         _animationProgresses.RemoveAt(i);
                         _animationSources.RemoveAt(i);
                         _animationDirections.RemoveAt(i);
                         _animationDatas.RemoveAt(i);
                     }
-                }
-                else {
+                } else {
                     if ((_animationDirections[i] == AnimationDirection.InOutIn && _animationProgresses[i] == MAX_VALUE)) {
                         _animationDirections[i] = AnimationDirection.InOutOut;
-                    }
-                    else if ((_animationDirections[i] == AnimationDirection.InOutRepeatingIn && _animationProgresses[i] == MAX_VALUE)) {
+                    } else if ((_animationDirections[i] == AnimationDirection.InOutRepeatingIn && _animationProgresses[i] == MAX_VALUE)) {
                         _animationDirections[i] = AnimationDirection.InOutRepeatingOut;
-                    }
-                    else if ((_animationDirections[i] == AnimationDirection.InOutRepeatingOut && _animationProgresses[i] == MIN_VALUE)) {
+                    } else if ((_animationDirections[i] == AnimationDirection.InOutRepeatingOut && _animationProgresses[i] == MIN_VALUE)) {
                         _animationDirections[i] = AnimationDirection.InOutRepeatingIn;
                     }
                 }
@@ -189,15 +183,13 @@
             if (!IsAnimating() || InterruptAnimation) {
                 if (Singular && _animationDirections.Count > 0) {
                     _animationDirections[0] = animationDirection;
-                }
-                else {
+                } else {
                     _animationDirections.Add(animationDirection);
                 }
 
                 if (Singular && _animationSources.Count > 0) {
                     _animationSources[0] = animationSource;
-                }
-                else {
+                } else {
                     _animationSources.Add(animationSource);
                 }
 
@@ -222,8 +214,7 @@
 
                 if (Singular && _animationDatas.Count > 0) {
                     _animationDatas[0] = data ?? new object[] { };
-                }
-                else {
+                } else {
                     _animationDatas.Add(data ?? new object[] { });
                 }
             }

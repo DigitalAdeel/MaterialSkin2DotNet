@@ -16,8 +16,7 @@ namespace MaterialSkin2DotNet {
             lighting = lighting + lighting * percent;
             if (lighting > 1.0) {
                 lighting = 1;
-            }
-            else if (lighting <= 0) {
+            } else if (lighting <= 0) {
                 lighting = 0.1f;
             }
             var tintedColor = ColorHelper.FromHsl(color.A, color.GetHue(), color.GetSaturation(), lighting);
@@ -36,8 +35,7 @@ namespace MaterialSkin2DotNet {
             lighting = lighting - lighting * percent;
             if (lighting > 1.0) {
                 lighting = 1;
-            }
-            else if (lighting <= 0) {
+            } else if (lighting <= 0) {
                 lighting = 0;
             }
             var tintedColor = ColorHelper.FromHsl(color.A, color.GetHue(), color.GetSaturation(), lighting);
@@ -77,8 +75,7 @@ namespace MaterialSkin2DotNet {
             if (0.5 < lighting) {
                 fMax = lighting - (lighting * saturation) + saturation;
                 fMin = lighting + (lighting * saturation) - saturation;
-            }
-            else {
+            } else {
                 fMax = lighting + (lighting * saturation);
                 fMin = lighting - (lighting * saturation);
             }
@@ -91,8 +88,7 @@ namespace MaterialSkin2DotNet {
             hue -= 2f * (float)Math.Floor(((iSextant + 1f) % 6f) / 2f);
             if (0 == iSextant % 2) {
                 fMid = hue * (fMax - fMin) + fMin;
-            }
-            else {
+            } else {
                 fMid = fMin - hue * (fMax - fMin);
             }
 
@@ -119,6 +115,24 @@ namespace MaterialSkin2DotNet {
                 default:
                     return Color.FromArgb(alpha, iMax, iMid, iMin);
             }
+        }
+
+        /// <summary>
+        /// Removes alpha value without changing Color.
+        /// </summary>
+        /// <param name="foreground">The foreground color.</param>
+        /// <param name="background">The background color.</param>
+        /// <returns></returns>
+        public static Color RemoveAlpha(Color foreground, Color background) {
+            if (foreground.A == 255)
+                return foreground;
+
+            var alpha = foreground.A / 255.0;
+            var diff = 1.0 - alpha;
+            return Color.FromArgb(255,
+                (byte)(foreground.R * alpha + background.R * diff),
+                (byte)(foreground.G * alpha + background.G * diff),
+                (byte)(foreground.B * alpha + background.B * diff));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace MaterialSkin2DotNet {
 
+    using MaterialSkin2DotNet.Controls;
     using System.Drawing;
 
     public class ColorScheme {
@@ -9,7 +10,7 @@
 
         public readonly Brush PrimaryBrush, DarkPrimaryBrush, LightPrimaryBrush, AccentBrush, TextBrush;
 
-        public ColorScheme(Primary primary = Primary.Green500, Primary darkPrimary = Primary.Green700, Primary lightPrimary = Primary.Green100, Accent accent = Accent.Blue200, TextShade textShade = TextShade.WHITE) {
+        public ColorScheme(Primary primary = Primary.Indigo500, Primary darkPrimary = Primary.Indigo700, Primary lightPrimary = Primary.Indigo100, Accent accent = Accent.Pink200, TextShade textShade = TextShade.WHITE) {
             //Color
             PrimaryColor = ((int)primary).ToColor();
             DarkPrimaryColor = ((int)darkPrimary).ToColor();
@@ -32,7 +33,7 @@
             TextBrush = new SolidBrush(TextColor);
         }
 
-        public ColorScheme(Color primary, Color darkPrimary, Color lightPrimary, Color accent, TextShade textShade = TextShade.WHITE) {
+        public ColorScheme(Color primary, Color darkPrimary, Color lightPrimary, Color accent, TextShade textShade) {
             //Color
             PrimaryColor = primary;
             DarkPrimaryColor = darkPrimary;

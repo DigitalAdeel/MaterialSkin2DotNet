@@ -107,8 +107,7 @@
             if (e.Item.Selected) {
                 // Selected background
                 g.FillRectangle(SkinManager.BackgroundFocusBrush, e.Bounds);
-            }
-            else if (e.Bounds.Contains(MouseLocation) && MouseState == MouseState.HOVER) {
+            } else if (e.Bounds.Contains(MouseLocation) && MouseState == MouseState.HOVER) {
                 // Hover background
                 g.FillRectangle(SkinManager.BackgroundHoverBrush, e.Bounds);
             }

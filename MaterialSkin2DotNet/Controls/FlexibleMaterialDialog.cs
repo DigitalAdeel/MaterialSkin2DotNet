@@ -68,14 +68,14 @@ namespace MaterialSkin2DotNet.Controls {
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            this.leftButton = new MaterialButton();
+            this.leftButton = new MaterialSkin2DotNet.Controls.MaterialButton();
             this.FlexibleMaterialFormBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.messageContainer = new System.Windows.Forms.Panel();
-            this.materialLabel1 = new MaterialLabel();
+            this.materialLabel1 = new MaterialSkin2DotNet.Controls.MaterialLabel();
             this.pictureBoxForIcon = new System.Windows.Forms.PictureBox();
-            this.richTextBoxMessage = new MaterialMultiLineTextBox();
-            this.middleButton = new MaterialButton();
-            this.rightButton = new MaterialButton();
+            this.richTextBoxMessage = new MaterialSkin2DotNet.Controls.MaterialMultiLineTextBox();
+            this.middleButton = new MaterialSkin2DotNet.Controls.MaterialButton();
+            this.rightButton = new MaterialSkin2DotNet.Controls.MaterialButton();
             ((System.ComponentModel.ISupportInitialize)(this.FlexibleMaterialFormBindingSource)).BeginInit();
             this.messageContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIcon)).BeginInit();
@@ -94,12 +94,12 @@ namespace MaterialSkin2DotNet.Controls {
             this.leftButton.Location = new System.Drawing.Point(40, 163);
             this.leftButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.leftButton.MinimumSize = new System.Drawing.Size(0, 24);
-            this.leftButton.MouseState = MouseState.HOVER;
+            this.leftButton.MouseState = MaterialSkin2DotNet.MouseState.HOVER;
             this.leftButton.Name = "leftButton";
             this.leftButton.Size = new System.Drawing.Size(108, 36);
             this.leftButton.TabIndex = 2;
             this.leftButton.Text = "OK";
-            this.leftButton.Type = MaterialButton.MaterialButtonType.Text;
+            this.leftButton.Type = MaterialSkin2DotNet.Controls.MaterialButton.MaterialButtonType.Text;
             this.leftButton.UseAccentColor = false;
             this.leftButton.UseVisualStyleBackColor = true;
             this.leftButton.Visible = false;
@@ -127,7 +127,7 @@ namespace MaterialSkin2DotNet.Controls {
             this.materialLabel1.Depth = 0;
             this.materialLabel1.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.materialLabel1.Location = new System.Drawing.Point(56, 12);
-            this.materialLabel1.MouseState = MouseState.HOVER;
+            this.materialLabel1.MouseState = MaterialSkin2DotNet.MouseState.HOVER;
             this.materialLabel1.Name = "materialLabel1";
             this.materialLabel1.Size = new System.Drawing.Size(314, 65);
             this.materialLabel1.TabIndex = 9;
@@ -157,7 +157,7 @@ namespace MaterialSkin2DotNet.Controls {
             this.richTextBoxMessage.Hint = "";
             this.richTextBoxMessage.Location = new System.Drawing.Point(56, 12);
             this.richTextBoxMessage.Margin = new System.Windows.Forms.Padding(0);
-            this.richTextBoxMessage.MouseState = MouseState.HOVER;
+            this.richTextBoxMessage.MouseState = MaterialSkin2DotNet.MouseState.HOVER;
             this.richTextBoxMessage.Name = "richTextBoxMessage";
             this.richTextBoxMessage.ReadOnly = true;
             this.richTextBoxMessage.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
@@ -180,12 +180,12 @@ namespace MaterialSkin2DotNet.Controls {
             this.middleButton.Location = new System.Drawing.Point(156, 163);
             this.middleButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.middleButton.MinimumSize = new System.Drawing.Size(0, 24);
-            this.middleButton.MouseState = MouseState.HOVER;
+            this.middleButton.MouseState = MaterialSkin2DotNet.MouseState.HOVER;
             this.middleButton.Name = "middleButton";
             this.middleButton.Size = new System.Drawing.Size(102, 36);
             this.middleButton.TabIndex = 3;
             this.middleButton.Text = "OK";
-            this.middleButton.Type = MaterialButton.MaterialButtonType.Text;
+            this.middleButton.Type = MaterialSkin2DotNet.Controls.MaterialButton.MaterialButtonType.Text;
             this.middleButton.UseAccentColor = false;
             this.middleButton.UseVisualStyleBackColor = true;
             this.middleButton.Visible = false;
@@ -203,12 +203,12 @@ namespace MaterialSkin2DotNet.Controls {
             this.rightButton.Location = new System.Drawing.Point(266, 163);
             this.rightButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.rightButton.MinimumSize = new System.Drawing.Size(0, 24);
-            this.rightButton.MouseState = MouseState.HOVER;
+            this.rightButton.MouseState = MaterialSkin2DotNet.MouseState.HOVER;
             this.rightButton.Name = "rightButton";
             this.rightButton.Size = new System.Drawing.Size(106, 36);
             this.rightButton.TabIndex = 0;
             this.rightButton.Text = "OK";
-            this.rightButton.Type = MaterialButton.MaterialButtonType.Contained;
+            this.rightButton.Type = MaterialSkin2DotNet.Controls.MaterialButton.MaterialButtonType.Contained;
             this.rightButton.UseAccentColor = false;
             this.rightButton.UseVisualStyleBackColor = true;
             this.rightButton.Visible = false;

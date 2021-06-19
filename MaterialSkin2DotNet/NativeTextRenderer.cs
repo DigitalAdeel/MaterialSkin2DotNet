@@ -36,6 +36,7 @@ public sealed class NativeTextRenderer : IDisposable {
         SetFont(font);
 
         var size = new Size();
+        if (string.IsNullOrEmpty(str)) return size;
         GetTextExtentPoint32(_hdc, str, str.Length, ref size);
         return size;
     }
@@ -44,6 +45,7 @@ public sealed class NativeTextRenderer : IDisposable {
         SelectObject(_hdc, LogFont);
 
         var size = new Size();
+        if (string.IsNullOrEmpty(str)) return size;
         GetTextExtentPoint32(_hdc, str, str.Length, ref size);
         return size;
     }
@@ -137,8 +139,7 @@ public sealed class NativeTextRenderer : IDisposable {
                 // Draw Text for multiline format
                 Rect region = new Rect(new Rectangle(pos, size));
                 DrawText(memoryHdc, str, -1, ref region, fmtFlags);
-            }
-            else {
+            } else {
                 // Calculate the string size
                 GetTextExtentPoint32(memoryHdc, str, str.Length, ref strSize);
                 // Aligment
@@ -158,8 +159,7 @@ public sealed class NativeTextRenderer : IDisposable {
 
             // copy from memory HDC to normal HDC with alpha blend so achieve the transparent text
             AlphaBlend(_hdc, point.X, point.Y, size.Width, size.Height, memoryHdc, 0, 0, size.Width, size.Height, new BlendFunction(color.A));
-        }
-        finally {
+        } finally {
             DeleteObject(dib);
             DeleteDC(memoryHdc);
         }
@@ -186,12 +186,10 @@ public sealed class NativeTextRenderer : IDisposable {
             Dictionary<FontStyle, IntPtr> dic2;
             if (dic1.TryGetValue(font.Size, out dic2)) {
                 dic2.TryGetValue(font.Style, out hfont);
-            }
-            else {
+            } else {
                 dic1[font.Size] = new Dictionary<FontStyle, IntPtr>();
             }
-        }
-        else {
+        } else {
             _fontsCache[font.Name] = new Dictionary<float, Dictionary<FontStyle, IntPtr>>();
             _fontsCache[font.Name][font.Size] = new Dictionary<FontStyle, IntPtr>();
         }

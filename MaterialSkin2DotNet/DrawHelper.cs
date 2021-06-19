@@ -1,7 +1,7 @@
-﻿using System.Drawing;
-using System.Drawing.Drawing2D;
+﻿namespace MaterialSkin2DotNet  {
 
-namespace MaterialSkin2DotNet {
+    using System.Drawing;
+    using System.Drawing.Drawing2D;
 
     /// <summary>
     /// Defines the <see cref="DrawHelper" />

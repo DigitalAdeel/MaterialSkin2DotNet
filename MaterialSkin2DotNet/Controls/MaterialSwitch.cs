@@ -1,5 +1,5 @@
-﻿namespace MaterialSkin2DotNet.Controls {
-
+﻿namespace MaterialSkin2DotNet.Controls
+{
     using MaterialSkin2DotNet.Animations;
     using System;
     using System.ComponentModel;
@@ -8,8 +8,8 @@
     using System.Drawing.Text;
     using System.Windows.Forms;
 
-    public class MaterialSwitch : CheckBox, IMaterialControl {
-
+    public class MaterialSwitch : CheckBox, IMaterialControl
+    {
         [Browsable(false)]
         public int Depth { get; set; }
 
@@ -25,13 +25,16 @@
         private bool _ripple;
 
         [Category("Appearance")]
-        public bool Ripple {
+        public bool Ripple
+        {
             get { return _ripple; }
-            set {
+            set
+            {
                 _ripple = value;
                 AutoSize = AutoSize; //Make AutoSize directly set the bounds.
 
-                if (value) {
+                if (value)
+                {
                     Margin = new Padding(0);
                 }
 
@@ -60,16 +63,20 @@
 
         private int _trackOffsetY;
 
-        public MaterialSwitch() {
-            _checkAM = new AnimationManager {
+        public MaterialSwitch()
+        {
+            _checkAM = new AnimationManager
+            {
                 AnimationType = AnimationType.EaseInOut,
                 Increment = 0.05
             };
-            _hoverAM = new AnimationManager(true) {
+            _hoverAM = new AnimationManager(true)
+            {
                 AnimationType = AnimationType.Linear,
                 Increment = 0.10
             };
-            _rippleAM = new AnimationManager(false) {
+            _rippleAM = new AnimationManager(false)
+            {
                 AnimationType = AnimationType.Linear,
                 Increment = 0.10,
                 SecondaryIncrement = 0.08
@@ -78,7 +85,8 @@
             _rippleAM.OnAnimationProgress += sender => Invalidate();
             _hoverAM.OnAnimationProgress += sender => Invalidate();
 
-            CheckedChanged += (sender, args) => {
+            CheckedChanged += (sender, args) =>
+            {
                 if (Ripple)
                     _checkAM.StartNewAnimation(Checked ? AnimationDirection.In : AnimationDirection.Out);
             };
@@ -87,7 +95,8 @@
             MouseLocation = new Point(-1, -1);
         }
 
-        protected override void OnSizeChanged(EventArgs e) {
+        protected override void OnSizeChanged(EventArgs e)
+        {
             base.OnSizeChanged(e);
 
             _trackOffsetY = Height / 2 - THUMB_SIZE_HALF;
@@ -98,9 +107,11 @@
             TRACK_CENTER_X_DELTA = TRACK_CENTER_X_END - TRACK_CENTER_X_BEGIN;
         }
 
-        public override Size GetPreferredSize(Size proposedSize) {
+        public override Size GetPreferredSize(Size proposedSize)
+        {
             Size strSize;
-            using (NativeTextRenderer NativeText = new NativeTextRenderer(CreateGraphics())) {
+            using (NativeTextRenderer NativeText = new NativeTextRenderer(CreateGraphics()))
+            {
                 strSize = NativeText.MeasureLogString(Text, SkinManager.getLogFontByType(MaterialSkinManager.fontType.Body1));
             }
             var w = TRACK_SIZE_WIDTH + THUMB_SIZE + strSize.Width;
@@ -111,7 +122,8 @@
 
         private const int TEXT_OFFSET = THUMB_SIZE;
 
-        protected override void OnPaint(PaintEventArgs pevent) {
+        protected override void OnPaint(PaintEventArgs pevent)
+        {
             var g = pevent.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
             g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
@@ -126,14 +138,16 @@
                         (Enabled ? SkinManager.ColorScheme.AccentColor : DrawHelper.BlendColor(SkinManager.ColorScheme.AccentColor, SkinManager.SwitchOffDisabledThumbColor, 197)), // On color
                         animationProgress * 255); // Blend amount
 
-            using (var path = DrawHelper.CreateRoundRect(new Rectangle(TRACK_CENTER_X_BEGIN - TRACK_RADIUS, TRACK_CENTER_Y - TRACK_SIZE_HEIGHT / 2, TRACK_SIZE_WIDTH, TRACK_SIZE_HEIGHT), TRACK_RADIUS)) {
+            using (var path = DrawHelper.CreateRoundRect(new Rectangle(TRACK_CENTER_X_BEGIN - TRACK_RADIUS, TRACK_CENTER_Y - TRACK_SIZE_HEIGHT / 2, TRACK_SIZE_WIDTH, TRACK_SIZE_HEIGHT), TRACK_RADIUS))
+            {
                 using (SolidBrush trackBrush = new SolidBrush(
                     Color.FromArgb(Enabled ? SkinManager.SwitchOffTrackColor.A : SkinManager.BackgroundDisabledColor.A, // Track alpha
                     DrawHelper.BlendColor( // animate color
                         (Enabled ? SkinManager.SwitchOffTrackColor : SkinManager.BackgroundDisabledColor), // Off color
                         SkinManager.ColorScheme.AccentColor, // On color
                         animationProgress * 255) // Blend amount
-                        .RemoveAlpha()))) {
+                        .RemoveAlpha())))
+                {
                     g.FillPath(trackBrush, path);
                 }
             }
@@ -148,30 +162,36 @@
                 Checked ? SkinManager.ColorScheme.AccentColor : // On color
                 (SkinManager.Theme == MaterialSkinManager.Themes.LIGHT ? Color.Black : Color.White)); // Off color
 
-            if (Ripple && _rippleAM.IsAnimating()) {
-                for (int i = 0; i < _rippleAM.GetAnimationCount(); i++) {
+            if (Ripple && _rippleAM.IsAnimating())
+            {
+                for (int i = 0; i < _rippleAM.GetAnimationCount(); i++)
+                {
                     double rippleAnimProgress = _rippleAM.GetProgress(i);
                     int rippleAnimatedDiameter = (_rippleAM.GetDirection(i) == AnimationDirection.InOutIn) ? (int)(rippleSize * (0.7 + (0.3 * rippleAnimProgress))) : rippleSize;
 
-                    using (SolidBrush rippleBrush = new SolidBrush(Color.FromArgb((int)(40 * rippleAnimProgress), rippleColor.RemoveAlpha()))) {
+                    using (SolidBrush rippleBrush = new SolidBrush(Color.FromArgb((int)(40 * rippleAnimProgress), rippleColor.RemoveAlpha())))
+                    {
                         g.FillEllipse(rippleBrush, new Rectangle(TRACK_CENTER_X_BEGIN + OffsetX - rippleAnimatedDiameter / 2, TRACK_CENTER_Y - rippleAnimatedDiameter / 2, rippleAnimatedDiameter, rippleAnimatedDiameter));
                     }
                 }
             }
 
             // Hover
-            if (Ripple) {
+            if (Ripple)
+            {
                 double rippleAnimProgress = _hoverAM.GetProgress();
                 int rippleAnimatedDiameter = (int)(rippleSize * (0.7 + (0.3 * rippleAnimProgress)));
 
-                using (SolidBrush rippleBrush = new SolidBrush(Color.FromArgb((int)(40 * rippleAnimProgress), rippleColor.RemoveAlpha()))) {
+                using (SolidBrush rippleBrush = new SolidBrush(Color.FromArgb((int)(40 * rippleAnimProgress), rippleColor.RemoveAlpha())))
+                {
                     g.FillEllipse(rippleBrush, new Rectangle(TRACK_CENTER_X_BEGIN + OffsetX - rippleAnimatedDiameter / 2, TRACK_CENTER_Y - rippleAnimatedDiameter / 2, rippleAnimatedDiameter, rippleAnimatedDiameter));
                 }
             }
 
             // draw Thumb Shadow
             RectangleF thumbBounds = new RectangleF(TRACK_CENTER_X_BEGIN + OffsetX - THUMB_SIZE_HALF, TRACK_CENTER_Y - THUMB_SIZE_HALF, THUMB_SIZE, THUMB_SIZE);
-            using (SolidBrush shadowBrush = new SolidBrush(Color.FromArgb(12, 0, 0, 0))) {
+            using (SolidBrush shadowBrush = new SolidBrush(Color.FromArgb(12, 0, 0, 0)))
+            {
                 g.FillEllipse(shadowBrush, new RectangleF(thumbBounds.X - 2, thumbBounds.Y - 1, thumbBounds.Width + 4, thumbBounds.Height + 6));
                 g.FillEllipse(shadowBrush, new RectangleF(thumbBounds.X - 1, thumbBounds.Y - 1, thumbBounds.Width + 2, thumbBounds.Height + 4));
                 g.FillEllipse(shadowBrush, new RectangleF(thumbBounds.X - 0, thumbBounds.Y - 0, thumbBounds.Width + 0, thumbBounds.Height + 2));
@@ -180,12 +200,14 @@
             }
 
             // draw Thumb
-            using (SolidBrush thumbBrush = new SolidBrush(thumbColor)) {
+            using (SolidBrush thumbBrush = new SolidBrush(thumbColor))
+            {
                 g.FillEllipse(thumbBrush, thumbBounds);
             }
 
             // draw text
-            using (NativeTextRenderer NativeText = new NativeTextRenderer(g)) {
+            using (NativeTextRenderer NativeText = new NativeTextRenderer(g))
+            {
                 Rectangle textLocation = new Rectangle(TEXT_OFFSET + TRACK_SIZE_WIDTH, 0, Width - (TEXT_OFFSET + TRACK_SIZE_WIDTH), Height);
                 NativeText.DrawTransparentText(
                     Text,
@@ -197,7 +219,8 @@
             }
         }
 
-        private Bitmap DrawCheckMarkBitmap() {
+        private Bitmap DrawCheckMarkBitmap()
+        {
             var checkMark = new Bitmap(THUMB_SIZE, THUMB_SIZE);
             var g = Graphics.FromImage(checkMark);
 
@@ -205,51 +228,62 @@
             g.Clear(Color.Transparent);
 
             // draw the checkmark lines
-            using (var pen = new Pen(Parent.BackColor, 2)) {
+            using (var pen = new Pen(Parent.BackColor, 2))
+            {
                 g.DrawLines(pen, CheckmarkLine);
             }
 
             return checkMark;
         }
 
-        public override bool AutoSize {
+        public override bool AutoSize
+        {
             get { return base.AutoSize; }
-            set {
+            set
+            {
                 base.AutoSize = value;
-                if (value) {
+                if (value)
+                {
                     Size = new Size(10, 10);
                 }
             }
         }
 
-        private bool IsMouseInCheckArea() {
+        private bool IsMouseInCheckArea()
+        {
             return ClientRectangle.Contains(MouseLocation);
         }
 
         private bool hovered = false;
 
-        protected override void OnCreateControl() {
+        protected override void OnCreateControl()
+        {
             base.OnCreateControl();
 
             if (DesignMode) return;
 
             MouseState = MouseState.OUT;
 
-            GotFocus += (sender, AddingNewEventArgs) => {
-                if (Ripple && !hovered) {
+            GotFocus += (sender, AddingNewEventArgs) =>
+            {
+                if (Ripple && !hovered)
+                {
                     _hoverAM.StartNewAnimation(AnimationDirection.In, new object[] { Checked });
                     hovered = true;
                 }
             };
 
-            LostFocus += (sender, args) => {
-                if (Ripple && hovered) {
+            LostFocus += (sender, args) =>
+            {
+                if (Ripple && hovered)
+                {
                     _hoverAM.StartNewAnimation(AnimationDirection.Out, new object[] { Checked });
                     hovered = false;
                 }
             };
 
-            MouseEnter += (sender, args) => {
+            MouseEnter += (sender, args) =>
+            {
                 MouseState = MouseState.HOVER;
                 //if (Ripple && !hovered)
                 //{
@@ -258,7 +292,8 @@
                 //}
             };
 
-            MouseLeave += (sender, args) => {
+            MouseLeave += (sender, args) =>
+            {
                 MouseLocation = new Point(-1, -1);
                 MouseState = MouseState.OUT;
                 //if (Ripple && hovered)
@@ -268,23 +303,29 @@
                 //}
             };
 
-            MouseDown += (sender, args) => {
+            MouseDown += (sender, args) =>
+            {
                 MouseState = MouseState.DOWN;
-                if (Ripple) {
+                if (Ripple)
+                {
                     _rippleAM.SecondaryIncrement = 0;
                     _rippleAM.StartNewAnimation(AnimationDirection.InOutIn, new object[] { Checked });
                 }
             };
 
-            KeyDown += (sender, args) => {
-                if (Ripple && (args.KeyCode == Keys.Space) && _rippleAM.GetAnimationCount() == 0) {
+            KeyDown += (sender, args) =>
+            {
+                if (Ripple && (args.KeyCode == Keys.Space) && _rippleAM.GetAnimationCount() == 0)
+                {
                     _rippleAM.SecondaryIncrement = 0;
                     _rippleAM.StartNewAnimation(AnimationDirection.InOutIn, new object[] { Checked });
                 }
             };
 
-            MouseUp += (sender, args) => {
-                if (Ripple) {
+            MouseUp += (sender, args) =>
+            {
+                if (Ripple)
+                {
                     MouseState = MouseState.HOVER;
                     _rippleAM.SecondaryIncrement = 0.08;
                     _hoverAM.StartNewAnimation(AnimationDirection.Out, new object[] { Checked });
@@ -292,14 +333,17 @@
                 }
             };
 
-            KeyUp += (sender, args) => {
-                if (Ripple && (args.KeyCode == Keys.Space)) {
+            KeyUp += (sender, args) =>
+            {
+                if (Ripple && (args.KeyCode == Keys.Space))
+                {
                     MouseState = MouseState.HOVER;
                     _rippleAM.SecondaryIncrement = 0.08;
                 }
             };
 
-            MouseMove += (sender, args) => {
+            MouseMove += (sender, args) =>
+            {
                 MouseLocation = args.Location;
                 Cursor = IsMouseInCheckArea() ? Cursors.Hand : Cursors.Default;
             };

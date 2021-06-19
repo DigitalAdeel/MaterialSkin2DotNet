@@ -1,21 +1,24 @@
-﻿namespace MaterialSkin2DotNet.Controls {
-
+﻿namespace MaterialSkin2DotNet.Controls
+{
     using MaterialSkin2DotNet.Animations;
     using System;
     using System.ComponentModel;
     using System.Drawing;
     using System.Linq;
+    using System.Data;
     using System.Windows.Forms;
 
-    public class MaterialComboBox : ComboBox, IMaterialControl {
-
+    public class MaterialComboBox : ComboBox, IMaterialControl
+    {
         // For some reason, even when overriding the AutoSize property, it doesn't appear on the properties panel, so we have to create a new one.
         [Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Category("Layout")]
         private bool _AutoResize;
 
-        public bool AutoResize {
+        public bool AutoResize
+        {
             get { return _AutoResize; }
-            set {
+            set
+            {
                 _AutoResize = value;
                 recalculateAutoSize();
             }
@@ -34,9 +37,11 @@
         private bool _UseTallSize;
 
         [Category("Material Skin"), DefaultValue(true), Description("Using a larger size enables the hint to always be visible")]
-        public bool UseTallSize {
+        public bool UseTallSize
+        {
             get { return _UseTallSize; }
-            set {
+            set
+            {
                 _UseTallSize = value;
                 setHeightVars();
                 Invalidate();
@@ -48,12 +53,32 @@
 
         private string _hint = string.Empty;
 
-        [Category("Material Skin"), DefaultValue("")]
-        public string Hint {
+        [Category("Material Skin"), DefaultValue(""), Localizable(true)]
+        public string Hint
+        {
             get { return _hint; }
-            set {
+            set
+            {
                 _hint = value;
                 hasHint = !String.IsNullOrEmpty(Hint);
+                Invalidate();
+            }
+        }
+
+        private int _startIndex;
+        public int StartIndex
+        {
+            get => _startIndex;
+            set
+            {
+                _startIndex = value;
+                try
+                {
+                    base.SelectedIndex = value;
+                }
+                catch
+                {
+                }
                 Invalidate();
             }
         }
@@ -68,7 +93,8 @@
 
         private readonly AnimationManager _animationManager;
 
-        public MaterialComboBox() {
+        public MaterialComboBox()
+        {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
 
             // Material Properties
@@ -85,37 +111,46 @@
             DropDownWidth = Width;
 
             // Animations
-            _animationManager = new AnimationManager(true) {
+            _animationManager = new AnimationManager(true)
+            {
                 Increment = 0.08,
                 AnimationType = AnimationType.EaseInOut
             };
             _animationManager.OnAnimationProgress += sender => Invalidate();
-
-            DropDownClosed += (sender, args) => {
+            _animationManager.OnAnimationFinished += sender => _animationManager.SetProgress(0);
+            DropDownClosed += (sender, args) =>
+            {
                 MouseState = MouseState.OUT;
                 if (SelectedIndex < 0 && !Focused) _animationManager.StartNewAnimation(AnimationDirection.Out);
             };
-            LostFocus += (sender, args) => {
+            LostFocus += (sender, args) =>
+            {
                 MouseState = MouseState.OUT;
                 if (SelectedIndex < 0) _animationManager.StartNewAnimation(AnimationDirection.Out);
             };
-            DropDown += (sender, args) => {
+            DropDown += (sender, args) =>
+            {
                 _animationManager.StartNewAnimation(AnimationDirection.In);
             };
-            GotFocus += (sender, args) => {
+            GotFocus += (sender, args) =>
+            {
                 _animationManager.StartNewAnimation(AnimationDirection.In);
+                Invalidate();
             };
-            MouseEnter += (sender, args) => {
+            MouseEnter += (sender, args) =>
+            {
                 MouseState = MouseState.HOVER;
                 Invalidate();
             };
-            MouseLeave += (sender, args) => {
+            MouseLeave += (sender, args) =>
+            {
                 MouseState = MouseState.OUT;
                 Invalidate();
             };
         }
 
-        protected override void OnPaint(PaintEventArgs pevent) {
+        protected override void OnPaint(PaintEventArgs pevent)
+        {
             Graphics g = pevent.Graphics;
 
             g.Clear(Parent.BackColor);
@@ -147,25 +182,30 @@
             // bottom line base
             g.FillRectangle(SkinManager.DividersAlternativeBrush, 0, LINE_Y, Width, 1);
 
-            if (!_animationManager.IsAnimating()) {
+            if (!_animationManager.IsAnimating())
+            {
                 // No animation
-                if (hasHint && UseTallSize && (DroppedDown || Focused || SelectedIndex >= 0)) {
+                if (hasHint && UseTallSize && (DroppedDown || Focused || SelectedIndex >= 0))
+                {
                     // hint text
                     hintRect = new Rectangle(SkinManager.FORM_PADDING, TEXT_SMALL_Y, Width, TEXT_SMALL_SIZE);
                     hintTextSize = 12;
                 }
 
                 // bottom line
-                if (DroppedDown || Focused) {
+                if (DroppedDown || Focused)
+                {
                     g.FillRectangle(UseAccent ? SkinManager.ColorScheme.AccentBrush : SkinManager.ColorScheme.PrimaryBrush, 0, LINE_Y, Width, 2);
                 }
             }
-            else {
+            else
+            {
                 // Animate - Focus got/lost
                 double animationProgress = _animationManager.GetProgress();
 
                 // hint Animation
-                if (hasHint && UseTallSize) {
+                if (hasHint && UseTallSize)
+                {
                     hintRect = new Rectangle(
                         SkinManager.FORM_PADDING,
                         userTextPresent && !_animationManager.IsAnimating() ? (TEXT_SMALL_Y) : ClientRectangle.Y + (int)((TEXT_SMALL_Y - ClientRectangle.Y) * animationProgress),
@@ -189,7 +229,8 @@
 
             g.Clip = new Region(textRect);
 
-            using (NativeTextRenderer NativeText = new NativeTextRenderer(g)) {
+            using (NativeTextRenderer NativeText = new NativeTextRenderer(g))
+            {
                 // Draw user text
                 NativeText.DrawTransparentText(
                     Text,
@@ -203,8 +244,10 @@
             g.ResetClip();
 
             // Draw hint text
-            if (hasHint && (UseTallSize || String.IsNullOrEmpty(Text))) {
-                using (NativeTextRenderer NativeText = new NativeTextRenderer(g)) {
+            if (hasHint && (UseTallSize || String.IsNullOrEmpty(Text)))
+            {
+                using (NativeTextRenderer NativeText = new NativeTextRenderer(g))
+                {
                     NativeText.DrawTransparentText(
                     Hint,
                     SkinManager.getTextBoxFontBySize(hintTextSize),
@@ -220,11 +263,13 @@
             }
         }
 
-        private void CustomMeasureItem(object sender, System.Windows.Forms.MeasureItemEventArgs e) {
+        private void CustomMeasureItem(object sender, System.Windows.Forms.MeasureItemEventArgs e)
+        {
             e.ItemHeight = HEIGHT - 7;
         }
 
-        private void CustomDrawItem(object sender, System.Windows.Forms.DrawItemEventArgs e) {
+        private void CustomDrawItem(object sender, System.Windows.Forms.DrawItemEventArgs e)
+        {
             if (e.Index < 0 || e.Index > Items.Count || !Focused) return;
 
             Graphics g = e.Graphics;
@@ -237,27 +282,40 @@
             {
                 g.FillRectangle(SkinManager.BackgroundHoverBrush, e.Bounds);
             }
-
+            
             string Text = "";
-            if (!string.IsNullOrWhiteSpace(DisplayMember)) {
-                Text = Items[e.Index].GetType().GetProperty(DisplayMember).GetValue(Items[e.Index], null).ToString();
+            if (!string.IsNullOrWhiteSpace(DisplayMember))
+            {
+                if (!Items[e.Index].GetType().Equals(typeof(DataRowView)))
+                {
+                    var item = Items[e.Index].GetType().GetProperty(DisplayMember).GetValue(Items[e.Index]);
+                    Text = item.ToString();
+                }
+                else
+                {
+                    var table = ((DataRow)Items[e.Index].GetType().GetProperty("Row").GetValue(Items[e.Index])).Table;
+                    Text = table.Rows[e.Index][DisplayMember].ToString();
+                }
             }
-            else {
+            else
+            {
                 Text = Items[e.Index].ToString();
             }
 
-            using (NativeTextRenderer NativeText = new NativeTextRenderer(g)) {
+            using (NativeTextRenderer NativeText = new NativeTextRenderer(g))
+            {
                 NativeText.DrawTransparentText(
                 Text,
                 SkinManager.getFontByType(MaterialSkinManager.fontType.Subtitle1),
-                SkinManager.TextHighEmphasisColor,
+                SkinManager.TextHighEmphasisNoAlphaColor,
                 new Point(e.Bounds.Location.X + SkinManager.FORM_PADDING, e.Bounds.Location.Y),
                 new Size(e.Bounds.Size.Width - SkinManager.FORM_PADDING * 2, e.Bounds.Size.Height),
                 NativeTextRenderer.TextAlignFlags.Left | NativeTextRenderer.TextAlignFlags.Middle); ;
             }
         }
 
-        protected override void OnCreateControl() {
+        protected override void OnCreateControl()
+        {
             base.OnCreateControl();
             MouseState = MouseState.OUT;
             MeasureItem += CustomMeasureItem;
@@ -268,13 +326,15 @@
             setHeightVars();
         }
 
-        protected override void OnResize(EventArgs e) {
+        protected override void OnResize(EventArgs e)
+        {
             base.OnResize(e);
             recalculateAutoSize();
             setHeightVars();
         }
 
-        private void setHeightVars() {
+        private void setHeightVars()
+        {
             HEIGHT = UseTallSize ? 50 : 36;
             Size = new Size(Size.Width, HEIGHT);
             LINE_Y = HEIGHT - BOTTOM_PADDING;
@@ -282,7 +342,8 @@
             DropDownHeight = ItemHeight * MaxDropDownItems + 2;
         }
 
-        public void recalculateAutoSize() {
+        public void recalculateAutoSize()
+        {
             if (!AutoResize) return;
 
             int w = DropDownWidth;
@@ -290,15 +351,18 @@
             int vertScrollBarWidth = (Items.Count > MaxDropDownItems) ? SystemInformation.VerticalScrollBarWidth : 0;
 
             Graphics g = CreateGraphics();
-            using (NativeTextRenderer NativeText = new NativeTextRenderer(g)) {
+            using (NativeTextRenderer NativeText = new NativeTextRenderer(g))
+            {
                 var itemsList = this.Items.Cast<object>().Select(item => item.ToString());
-                foreach (string s in itemsList) {
+                foreach (string s in itemsList)
+                {
                     int newWidth = NativeText.MeasureLogString(s, SkinManager.getLogFontByType(MaterialSkinManager.fontType.Subtitle1)).Width + vertScrollBarWidth + padding;
                     if (w < newWidth) w = newWidth;
                 }
             }
 
-            if (Width != w) {
+            if (Width != w)
+            {
                 DropDownWidth = w;
                 Width = w;
             }
