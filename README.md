@@ -24,7 +24,7 @@ Actionbar for MaterialSkin
 FormtoManage Bug + Workaround
 ![FormtoManage Bug + Workaround](https://github.com/DigitalAdeel/MaterialSkin2DotNet/blob/master/FormtoManageBug.gif)
 
-For more changes, visit ![leocb/MaterialSkin](https://github.com/leocb/MaterialSkin/)
+For more change notes, visit ![leocb/MaterialSkin](https://github.com/leocb/MaterialSkin/)
 
 1.0.1
 
