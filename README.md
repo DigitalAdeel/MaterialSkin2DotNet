@@ -10,8 +10,8 @@ A nuget package version is available [here](https://www.nuget.org/packages/Mater
 
 Or simply search for MaterialSkin2DotNet on the **Nuget Package Manager** inside Visual Studio
 
-# Work in Progress: DataTable ... Click on the image below to view Video Preview
-[![DataTable](https://github.com/DigitalAdeel/MaterialSkin2DotNet/blob/master/Screenshot%20(20).png)](https://github.com/DigitalAdeel/MaterialSkin2DotNet/blob/master/DataTable.mp4)
+# DataTable ... Click on the link below to see demo
+[DataTable](https://youtu.be/LSXJA0G1LeI)
 
 # Release Notes
 
