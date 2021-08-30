@@ -13,7 +13,7 @@ Or simply search for MaterialSkin2DotNet on the **Nuget Package Manager** inside
 # DataTable
 ![DataTableDemo](https://raw.githubusercontent.com/DigitalAdeel/MaterialSkin2DotNet/master/mk2dnDataTable.webp)
 or
-# Click on the link below to see demo
+# Click on the link below to watch on Youtube
 [Watch on Youtube](https://youtu.be/LSXJA0G1LeI)
 
 # Release Notes
