@@ -4,7 +4,7 @@
 
 Theming .NET WinForms, C# or VB.Net, to Google's Material Design Principles.
 
-![home](https://user-images.githubusercontent.com/8310271/66237904-9dff9380-e6cc-11e9-9f08-3c5ba182e144.png)
+![home](https://user-images.githubusercontent.com/77468294/134770847-0f20f37f-e3e7-4e15-b838-cf53b0b32c4e.png)
 
 # Nuget Package
 
@@ -24,6 +24,18 @@ or
 
 # Release Notes
 
+# 1.1.2
+Added Changes from MaterialSkin.2 repo till 3/21/2022
+
+# New Controls
+----------
+# MaterialDialog
+# MaterialMaskedTextBox
+# MaterialMultiLineTextBox2
+# MaterialSnackBar
+# MaterialTextBox2 => Use this because MaterialTextBox is now obsolete.
+
+Screenshots will be placed soon.
 # 1.1
 ---
 Updated upto MaterialSkin.2 versions 2.2.0 + Changes on his repo till 18/06/2021
