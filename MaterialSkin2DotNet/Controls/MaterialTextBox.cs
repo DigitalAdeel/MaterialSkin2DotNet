@@ -9,7 +9,13 @@
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
 
-    public class MaterialTextBox : RichTextBox, IMaterialControl {
+
+    [ToolboxItem(false), Description("This control has been replaced by MaterialTextBox2"), Obsolete("Use MaterialTextBox2 instead", false)]
+    public class MaterialTextBox : RichTextBox, IMaterialControl
+    {
+
+        MaterialContextMenuStrip cms = new TextBoxContextMenuStrip();
+        ContextMenuStrip _lastContextMenuStrip = new ContextMenuStrip();
 
         //Properties for managing the material design properties
         [Browsable(false)]
@@ -27,12 +33,15 @@
         private bool _UseTallSize;
 
         [Category("Material Skin"), DefaultValue(true), Description("Using a larger size enables the hint to always be visible")]
-        public bool UseTallSize {
+        public bool UseTallSize
+        {
             get { return _UseTallSize; }
-            set {
+            set
+            {
                 _UseTallSize = value;
                 HEIGHT = UseTallSize ? 50 : 36;
                 Size = new Size(Size.Width, HEIGHT);
+                UpdateRects(false);
                 Invalidate();
             }
         }
@@ -43,9 +52,11 @@
         private string _hint = string.Empty;
 
         [Category("Material Skin"), DefaultValue(""), Localizable(true)]
-        public string Hint {
+        public string Hint
+        {
             get { return _hint; }
-            set {
+            set
+            {
                 _hint = value;
                 hasHint = !String.IsNullOrEmpty(Hint);
                 Invalidate();
@@ -58,15 +69,20 @@
         /// <summary>
         /// Gets or sets the leading Icon
         /// </summary>
-        public Image LeadingIcon {
+        public Image LeadingIcon
+        {
             get { return _leadingIcon; }
-            set {
+            set
+            {
                 _leadingIcon = value;
-                UpdateRects();
+                UpdateRects(false);
                 preProcessIcons();
-                if (AutoSize) {
+                if (AutoSize)
+                {
                     Refresh();
-                } else {
+                }
+                else
+                {
                     Invalidate();
                 }
             }
@@ -78,16 +94,60 @@
         /// <summary>
         /// Gets or sets the trailing Icon
         /// </summary>
-        public Image TrailingIcon {
+        public Image TrailingIcon
+        {
             get { return _trailingIcon; }
-            set {
+            set
+            {
                 _trailingIcon = value;
-                UpdateRects();
+                UpdateRects(false);
                 preProcessIcons();
-                if (AutoSize) {
+                if (AutoSize)
+                {
                     Refresh();
-                } else {
+                }
+                else
+                {
                     Invalidate();
+                }
+            }
+        }
+
+
+        public override ContextMenuStrip ContextMenuStrip
+        {
+            get { return base.ContextMenuStrip; }
+            set
+            {
+                if (value != null)
+                {
+                    base.ContextMenuStrip = value;
+                }
+                else
+                {
+                    base.ContextMenuStrip = cms;
+                }
+                _lastContextMenuStrip = base.ContextMenuStrip;
+            }
+        }
+
+
+        public override bool ShortcutsEnabled
+        {
+            get
+            {
+                return base.ShortcutsEnabled;
+            }
+            set
+            {
+                base.ShortcutsEnabled = value;
+                if (value == false)
+                {
+                    base.ContextMenuStrip = null;
+                }
+                else
+                {
+                    base.ContextMenuStrip = _lastContextMenuStrip;
                 }
             }
         }
@@ -111,6 +171,41 @@
         private Dictionary<string, TextureBrush> iconsBrushes;
         private Dictionary<string, TextureBrush> iconsErrorBrushes;
 
+        private bool _animateReadOnly;
+
+        [Category("Material Skin")]
+        [Browsable(true)]
+        public bool AnimateReadOnly
+        {
+            get => _animateReadOnly;
+            set
+            {
+                _animateReadOnly = value;
+                Invalidate();
+            }
+        }
+
+        private bool _leaveOnEnterKey;
+
+        [Category("Material Skin"), DefaultValue(false), Description("Select next control which have TabStop property set to True when enter key is pressed.")]
+        public bool LeaveOnEnterKey
+        {
+            get => _leaveOnEnterKey;
+            set
+            {
+                _leaveOnEnterKey = value;
+                if (value)
+                {
+                    KeyDown += new KeyEventHandler(LeaveOnEnterKey_KeyDown);
+                }
+                else
+                {
+                    KeyDown -= LeaveOnEnterKey_KeyDown;
+                }
+                Invalidate();
+            }
+        }
+
         #region "Events"
 
         [Category("Action")]
@@ -121,9 +216,10 @@
         [Description("Fires when Trailing Icon is clicked")]
         public event EventHandler TrailingIconClick;
 
-        #endregion "Events"
+        #endregion
 
-        public MaterialTextBox() {
+        public MaterialTextBox()
+        {
             // Material Properties
             Hint = "";
             Password = false;
@@ -136,24 +232,25 @@
             BorderStyle = BorderStyle.None;
 
             // Animations
-            _animationManager = new AnimationManager {
+            _animationManager = new AnimationManager
+            {
                 Increment = 0.08,
                 AnimationType = AnimationType.EaseInOut
             };
             _animationManager.OnAnimationProgress += sender => Invalidate();
 
-            SkinManager.ColorSchemeChanged += sender => {
+            SkinManager.ColorSchemeChanged += sender =>
+            {
                 preProcessIcons();
             };
 
-            SkinManager.ThemeChanged += sender => {
+            SkinManager.ThemeChanged += sender =>
+            {
                 preProcessIcons();
             };
 
-            MaterialContextMenuStrip cms = new TextBoxContextMenuStrip();
             cms.Opening += ContextMenuStripOnOpening;
             cms.OnItemClickStart += ContextMenuStripOnItemClickStart;
-
             ContextMenuStrip = cms;
 
             MaxLength = 50;
@@ -164,7 +261,8 @@
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 
-        protected override void OnCreateControl() {
+        protected override void OnCreateControl()
+        {
             base.OnCreateControl();
             base.Font = SkinManager.getFontByType(MaterialSkinManager.fontType.Subtitle1);
             base.AutoSize = false;
@@ -182,22 +280,27 @@
             // events
             MouseState = MouseState.OUT;
             LostFocus += (sender, args) => _animationManager.StartNewAnimation(AnimationDirection.Out);
-            GotFocus += (sender, args) => {
+            GotFocus += (sender, args) =>
+            {
                 _animationManager.StartNewAnimation(AnimationDirection.In);
             };
-            MouseEnter += (sender, args) => {
+            MouseEnter += (sender, args) =>
+            {
                 MouseState = MouseState.HOVER;
                 Invalidate();
             };
-            MouseLeave += (sender, args) => {
+            MouseLeave += (sender, args) =>
+            {
                 MouseState = MouseState.OUT;
                 Invalidate();
             };
-            HScroll += (sender, args) => {
+            HScroll += (sender, args) =>
+            {
                 SendMessage(this.Handle, EM_GETSCROLLPOS, 0, ref scrollPos);
                 Invalidate();
             };
-            KeyDown += (sender, args) => {
+            KeyDown += (sender, args) =>
+            {
                 SendMessage(this.Handle, EM_GETSCROLLPOS, 0, ref scrollPos);
             };
         }
@@ -209,14 +312,17 @@
         [DllImport("user32.dll")]
         private static extern IntPtr SendMessage(IntPtr hWnd, Int32 wMsg, Int32 wParam, ref Point lParam);
 
-        public override Size GetPreferredSize(Size proposedSize) {
+        public override Size GetPreferredSize(Size proposedSize)
+        {
             return new Size(proposedSize.Width, HEIGHT);
         }
 
-        private static Size ResizeIcon(Image Icon) {
+        private static Size ResizeIcon(Image Icon)
+        {
             int newWidth, newHeight;
             //Resize icon if greater than ICON_SIZE
-            if (Icon.Width > ICON_SIZE || Icon.Height > ICON_SIZE) {
+            if (Icon.Width > ICON_SIZE || Icon.Height > ICON_SIZE)
+            {
                 //calculate aspect ratio
                 float aspect = Icon.Width / (float)Icon.Height;
 
@@ -225,28 +331,36 @@
                 newHeight = (int)(newWidth / aspect);
 
                 //if one of the two dimensions exceed the box dimensions
-                if (newWidth > ICON_SIZE || newHeight > ICON_SIZE) {
+                if (newWidth > ICON_SIZE || newHeight > ICON_SIZE)
+                {
                     //depending on which of the two exceeds the box dimensions set it as the box dimension and calculate the other one based on the aspect ratio
-                    if (newWidth > newHeight) {
+                    if (newWidth > newHeight)
+                    {
                         newWidth = ICON_SIZE;
                         newHeight = (int)(newWidth / aspect);
-                    } else {
+                    }
+                    else
+                    {
                         newHeight = ICON_SIZE;
                         newWidth = (int)(newHeight * aspect);
                     }
                 }
-            } else {
+            }
+            else
+            {
                 newWidth = Icon.Width;
                 newHeight = Icon.Height;
             }
 
-            return new Size() {
+            return new Size()
+            {
                 Height = newHeight,
                 Width = newWidth
             };
         }
 
-        private void preProcessIcons() {
+        private void preProcessIcons()
+        {
             if (_trailingIcon == null && _leadingIcon == null) return;
 
             // Calculate lightness and color
@@ -284,7 +398,8 @@
             // Image Rect
             Rectangle destRect = new Rectangle(0, 0, ICON_SIZE, ICON_SIZE);
 
-            if (_leadingIcon != null) {
+            if (_leadingIcon != null)
+            {
                 // ********************
                 // *** _leadingIcon ***
                 // ********************
@@ -295,7 +410,8 @@
 
                 // Create a pre-processed copy of the image (GRAY)
                 Bitmap bgray = new Bitmap(destRect.Width, destRect.Height);
-                using (Graphics gGray = Graphics.FromImage(bgray)) {
+                using (Graphics gGray = Graphics.FromImage(bgray))
+                {
                     gGray.DrawImage(_leadingIconIconResized,
                         new Point[] {
                                     new Point(0, 0),
@@ -319,7 +435,8 @@
                 iconsBrushes.Add("_leadingIcon", textureBrushGray);
             }
 
-            if (_trailingIcon != null) {
+            if (_trailingIcon != null)
+            {
                 // *********************
                 // *** _trailingIcon ***
                 // *********************
@@ -330,7 +447,8 @@
 
                 // Create a pre-processed copy of the image (GRAY)
                 Bitmap bgray = new Bitmap(destRect.Width, destRect.Height);
-                using (Graphics gGray = Graphics.FromImage(bgray)) {
+                using (Graphics gGray = Graphics.FromImage(bgray))
+                {
                     gGray.DrawImage(_trailingIconResized,
                         new Point[] {
                                     new Point(0, 0),
@@ -342,7 +460,8 @@
 
                 //Create a pre - processed copy of the image(RED)
                 Bitmap bred = new Bitmap(destRect.Width, destRect.Height);
-                using (Graphics gred = Graphics.FromImage(bred)) {
+                using (Graphics gred = Graphics.FromImage(bred))
+                {
                     gred.DrawImage(_trailingIconResized,
                         new Point[] {
                                     new Point(0, 0),
@@ -351,6 +470,7 @@
                         },
                         destRect, GraphicsUnit.Pixel, redImageAttributes);
                 }
+
 
                 // added processed image to brush for drawing
                 TextureBrush textureBrushGray = new TextureBrush(bgray);
@@ -373,7 +493,8 @@
             }
         }
 
-        private void UpdateRects(bool RedefineTextField = true) {
+        private void UpdateRects(bool RedefineTextField = true)
+        {
             if (LeadingIcon != null)
                 _left_padding = SkinManager.FORM_PADDING + ICON_SIZE;
             else
@@ -388,7 +509,8 @@
             _trailingIconBounds = new Rectangle(Width - (ICON_SIZE + 8), (HEIGHT / 2) - (ICON_SIZE / 2), ICON_SIZE, ICON_SIZE);
             _textfieldBounds = new Rectangle(_left_padding, ClientRectangle.Y, Width - _left_padding - _right_padding, LINE_Y);
 
-            if (RedefineTextField) {
+            if (RedefineTextField)
+            {
                 var rect = new Rectangle(_left_padding, UseTallSize ? hasHint ?
             (HINT_TEXT_SMALL_Y + HINT_TEXT_SMALL_SIZE) : // Has hint and it's tall
             (int)(LINE_Y / 3.5) : // No hint and tall
@@ -397,18 +519,22 @@
                 RECT rc = new RECT(rect);
                 SendMessageRefRect(Handle, EM_SETRECT, 0, ref rc);
             }
+
         }
 
-        public void SetErrorState(bool ErrorState) {
+        public void SetErrorState(bool ErrorState)
+        {
             _errorState = ErrorState;
             Invalidate();
         }
 
-        public bool GetErrorState() {
+        public bool GetErrorState()
+        {
             return _errorState;
         }
 
-        protected override void OnPaint(PaintEventArgs pevent) {
+        protected override void OnPaint(PaintEventArgs pevent)
+        {
             base.OnPaint(pevent);
 
             var g = pevent.Graphics;
@@ -420,17 +546,19 @@
             g.FillRectangle(
                 !Enabled ? SkinManager.BackgroundDisabledBrush : // Disabled
                 Focused ? SkinManager.BackgroundFocusBrush :  // Focused
-                MouseState == MouseState.HOVER ? SkinManager.BackgroundHoverBrush : // Hover
+                MouseState == MouseState.HOVER && (!ReadOnly || (ReadOnly && !AnimateReadOnly)) ? SkinManager.BackgroundHoverBrush : // Hover
                 backBrush, // Normal
                 ClientRectangle.X, ClientRectangle.Y, ClientRectangle.Width, LINE_Y);
 
             //Leading Icon
-            if (LeadingIcon != null) {
+            if (LeadingIcon != null)
+            {
                 g.FillRectangle(iconsBrushes["_leadingIcon"], _leadingIconBounds);
             }
 
             //Trailing Icon
-            if (TrailingIcon != null) {
+            if (TrailingIcon != null)
+            {
                 if (_errorState)
                     g.FillRectangle(iconsErrorBrushes["_trailingIcon"], _trailingIconBounds);
                 else
@@ -449,36 +577,45 @@
             // bottom line base
             g.FillRectangle(SkinManager.DividersAlternativeBrush, 0, LINE_Y, Width, 1);
 
-            if (!_animationManager.IsAnimating()) {
-                // No animation
-                if (hasHint && UseTallSize && (Focused || userTextPresent)) {
-                    // hint text
-                    hintRect = new Rectangle(_left_padding, HINT_TEXT_SMALL_Y, Width - _left_padding - _right_padding, HINT_TEXT_SMALL_SIZE);
-                    hintTextSize = 12;
-                }
+            if (ReadOnly == false || (ReadOnly && AnimateReadOnly))
+            {
+                if (!_animationManager.IsAnimating())
+                {
+                    // No animation
+                    if (hasHint && UseTallSize && (Focused || userTextPresent))
+                    {
+                        // hint text
+                        hintRect = new Rectangle(_left_padding, HINT_TEXT_SMALL_Y, Width - _left_padding - _right_padding, HINT_TEXT_SMALL_SIZE);
+                        hintTextSize = 12;
+                    }
 
-                // bottom line
-                if (Focused) {
-                    g.FillRectangle(_errorState ? SkinManager.BackgroundHoverRedBrush : UseAccent ? SkinManager.ColorScheme.AccentBrush : SkinManager.ColorScheme.PrimaryBrush, 0, LINE_Y, Width, 2);
+                    // bottom line
+                    if (Focused)
+                    {
+                        g.FillRectangle(_errorState ? SkinManager.BackgroundHoverRedBrush : UseAccent ? SkinManager.ColorScheme.AccentBrush : SkinManager.ColorScheme.PrimaryBrush, 0, LINE_Y, Width, 2);
+                    }
                 }
-            } else {
-                // Animate - Focus got/lost
-                double animationProgress = _animationManager.GetProgress();
+                else
+                {
+                    // Animate - Focus got/lost
+                    double animationProgress = _animationManager.GetProgress();
 
-                // hint Animation
-                if (hasHint && UseTallSize) {
-                    hintRect = new Rectangle(
-                        _left_padding,
-                        userTextPresent ? (HINT_TEXT_SMALL_Y) : ClientRectangle.Y + (int)((HINT_TEXT_SMALL_Y - ClientRectangle.Y) * animationProgress),
-                        Width - _left_padding - _right_padding,
-                        userTextPresent ? (HINT_TEXT_SMALL_SIZE) : (int)(LINE_Y + (HINT_TEXT_SMALL_SIZE - LINE_Y) * animationProgress));
-                    hintTextSize = userTextPresent ? 12 : (int)(16 + (12 - 16) * animationProgress);
+                    // hint Animation
+                    if (hasHint && UseTallSize)
+                    {
+                        hintRect = new Rectangle(
+                            _left_padding,
+                            userTextPresent ? (HINT_TEXT_SMALL_Y) : ClientRectangle.Y + (int)((HINT_TEXT_SMALL_Y - ClientRectangle.Y) * animationProgress),
+                            Width - _left_padding - _right_padding,
+                            userTextPresent ? (HINT_TEXT_SMALL_SIZE) : (int)(LINE_Y + (HINT_TEXT_SMALL_SIZE - LINE_Y) * animationProgress));
+                        hintTextSize = userTextPresent ? 12 : (int)(16 + (12 - 16) * animationProgress);
+                    }
+
+                    // Line Animation
+                    int LineAnimationWidth = (int)(Width * animationProgress);
+                    int LineAnimationX = (Width / 2) - (LineAnimationWidth / 2);
+                    g.FillRectangle(UseAccent ? SkinManager.ColorScheme.AccentBrush : SkinManager.ColorScheme.PrimaryBrush, LineAnimationX, LINE_Y, LineAnimationWidth, 2);
                 }
-
-                // Line Animation
-                int LineAnimationWidth = (int)(Width * animationProgress);
-                int LineAnimationX = (Width / 2) - (LineAnimationWidth / 2);
-                g.FillRectangle(UseAccent ? SkinManager.ColorScheme.AccentBrush : SkinManager.ColorScheme.PrimaryBrush, LineAnimationX, LINE_Y, LineAnimationWidth, 2);
             }
 
             // Text stuff:
@@ -496,7 +633,8 @@
             g.Clip = new Region(textRect);
             textRect.X -= scrollPos.X;
 
-            using (NativeTextRenderer NativeText = new NativeTextRenderer(g)) {
+            using (NativeTextRenderer NativeText = new NativeTextRenderer(g))
+            {
                 // Selection rects calc
                 string textBeforeSelection = textToDisplay.Substring(0, SelectionStart);
                 textSelected = textToDisplay.Substring(SelectionStart, SelectionLength);
@@ -525,12 +663,14 @@
                     NativeTextRenderer.TextAlignFlags.Left | NativeTextRenderer.TextAlignFlags.Middle);
             }
 
-            if (Focused) {
+            if (Focused)
+            {
                 // Draw Selection Rectangle
                 g.FillRectangle(UseAccent ? SkinManager.ColorScheme.AccentBrush : SkinManager.ColorScheme.DarkPrimaryBrush, textSelectRect);
 
                 // Draw Selected Text
-                using (NativeTextRenderer NativeText = new NativeTextRenderer(g)) {
+                using (NativeTextRenderer NativeText = new NativeTextRenderer(g))
+                {
                     NativeText.DrawTransparentText(
                         textSelected,
                         SkinManager.getLogFontByType(MaterialSkinManager.fontType.Subtitle1),
@@ -544,8 +684,10 @@
             g.Clip = new Region(ClientRectangle);
 
             // Draw hint text
-            if (hasHint && (UseTallSize || String.IsNullOrEmpty(Text))) {
-                using (NativeTextRenderer NativeText = new NativeTextRenderer(g)) {
+            if (hasHint && (UseTallSize || String.IsNullOrEmpty(Text)))
+            {
+                using (NativeTextRenderer NativeText = new NativeTextRenderer(g))
+                {
                     NativeText.DrawTransparentText(
                     Hint,
                     SkinManager.getTextBoxFontBySize(hintTextSize),
@@ -562,53 +704,72 @@
             }
         }
 
-        protected override void OnTextChanged(EventArgs e) {
+        protected override void OnTextChanged(EventArgs e)
+        {
             base.OnTextChanged(e);
             Invalidate();
         }
 
-        protected override void OnMouseMove(MouseEventArgs e) {
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
             base.OnMouseMove(e);
 
             if (DesignMode)
                 return;
 
-            if (_textfieldBounds.Contains(e.Location)) {
+            if (_textfieldBounds.Contains(e.Location))
+            {
                 Cursor = Cursors.IBeam;
-            } else if (LeadingIcon != null && _leadingIconBounds.Contains(e.Location) && LeadingIconClick != null) {
+            }
+            else if (LeadingIcon != null && _leadingIconBounds.Contains(e.Location) && LeadingIconClick != null)
+            {
                 Cursor = Cursors.Hand;
-            } else if (TrailingIcon != null && _trailingIconBounds.Contains(e.Location) && TrailingIconClick != null) {
+            }
+            else if (TrailingIcon != null && _trailingIconBounds.Contains(e.Location) && TrailingIconClick != null)
+            {
                 Cursor = Cursors.Hand;
-            } else {
+            }
+            else
+            {
                 Cursor = Cursors.Default;
             }
+
         }
 
-        protected override void OnMouseDown(MouseEventArgs e) {
-            if (LeadingIcon != null && _leadingIconBounds.Contains(e.Location)) {
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            if (LeadingIcon != null && _leadingIconBounds.Contains(e.Location))
+            {
                 LeadingIconClick?.Invoke(this, new EventArgs());
-            } else if (TrailingIcon != null && _trailingIconBounds.Contains(e.Location)) {
+            }
+            else if (TrailingIcon != null && _trailingIconBounds.Contains(e.Location))
+            {
                 TrailingIconClick?.Invoke(this, new EventArgs());
-            } else {
+            }
+            else
+            {
                 if (DesignMode)
                     return;
             }
             base.OnMouseDown(e);
         }
 
-        protected override void OnSelectionChanged(EventArgs e) {
+        protected override void OnSelectionChanged(EventArgs e)
+        {
             base.OnSelectionChanged(e);
             Invalidate();
         }
 
-        protected override void OnResize(EventArgs e) {
+        protected override void OnResize(EventArgs e)
+        {
             base.OnResize(e);
             Size = new Size(Width, HEIGHT);
             LINE_Y = HEIGHT - BOTTOM_PADDING;
             UpdateRects(false);
             preProcessIcons();
 
-            if (DesignMode) {
+            if (DesignMode)
+            {
                 //Below code helps to redraw images in design mode only
                 Image _tmpimage;
                 _tmpimage = LeadingIcon;
@@ -620,8 +781,10 @@
             }
         }
 
-        private void ContextMenuStripOnItemClickStart(object sender, ToolStripItemClickedEventArgs toolStripItemClickedEventArgs) {
-            switch (toolStripItemClickedEventArgs.ClickedItem.Text) {
+        private void ContextMenuStripOnItemClickStart(object sender, ToolStripItemClickedEventArgs toolStripItemClickedEventArgs)
+        {
+            switch (toolStripItemClickedEventArgs.ClickedItem.Text)
+            {
                 case "Cut":
                     Cut();
                     break;
@@ -644,21 +807,34 @@
             }
         }
 
-        private void ContextMenuStripOnOpening(object sender, CancelEventArgs cancelEventArgs) {
+        private void ContextMenuStripOnOpening(object sender, CancelEventArgs cancelEventArgs)
+        {
             var strip = sender as TextBoxContextMenuStrip;
-            if (strip != null) {
-                strip.Cut.Enabled = !string.IsNullOrEmpty(SelectedText);
+            if (strip != null)
+            {
+                strip.Cut.Enabled = !string.IsNullOrEmpty(SelectedText) && !ReadOnly;
                 strip.Copy.Enabled = !string.IsNullOrEmpty(SelectedText);
-                strip.Paste.Enabled = Clipboard.ContainsText();
-                strip.Delete.Enabled = !string.IsNullOrEmpty(SelectedText);
+                strip.Paste.Enabled = Clipboard.ContainsText() && !ReadOnly;
+                strip.Delete.Enabled = !string.IsNullOrEmpty(SelectedText) && !ReadOnly;
                 strip.SelectAll.Enabled = !string.IsNullOrEmpty(Text);
+            }
+        }
+
+        private void LeaveOnEnterKey_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                SendKeys.Send("{TAB}");
             }
         }
 
         // Cursor flickering fix
         private const int WM_SETCURSOR = 0x0020;
 
-        protected override void WndProc(ref Message m) {
+        protected override void WndProc(ref Message m)
+        {
             if (m.Msg == WM_SETCURSOR)
                 Cursor.Current = this.Cursor;
             else
@@ -672,25 +848,30 @@
         private static extern int SendMessageRefRect(IntPtr hWnd, uint msg, int wParam, ref RECT rect);
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct RECT {
+        private struct RECT
+        {
             public readonly int Left;
             public readonly int Top;
             public readonly int Right;
             public readonly int Bottom;
 
-            private RECT(int left, int top, int right, int bottom) {
+            private RECT(int left, int top, int right, int bottom)
+            {
                 Left = left;
                 Top = top;
                 Right = right;
                 Bottom = bottom;
             }
 
-            public RECT(Rectangle r) : this(r.Left, r.Top, r.Right, r.Bottom) {
+            public RECT(Rectangle r) : this(r.Left, r.Top, r.Right, r.Bottom)
+            {
             }
         }
     }
 
-    public class TextBoxContextMenuStrip : MaterialContextMenuStrip {
+    [ToolboxItem(false)]
+    public class TextBoxContextMenuStrip : MaterialContextMenuStrip
+    {
         public readonly ToolStripItem SelectAll = new MaterialToolStripMenuItem { Text = "Select All" };
         public readonly ToolStripItem Separator2 = new ToolStripSeparator();
         public readonly ToolStripItem Paste = new MaterialToolStripMenuItem { Text = "Paste" };
@@ -698,7 +879,8 @@
         public readonly ToolStripItem Cut = new MaterialToolStripMenuItem { Text = "Cut" };
         public readonly ToolStripItem Delete = new MaterialToolStripMenuItem { Text = "Delete" };
 
-        public TextBoxContextMenuStrip() {
+        public TextBoxContextMenuStrip()
+        {
             Items.AddRange(new[]
                 {
                     Cut,

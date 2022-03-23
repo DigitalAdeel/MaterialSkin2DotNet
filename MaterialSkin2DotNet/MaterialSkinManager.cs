@@ -1,4 +1,5 @@
-﻿namespace MaterialSkin2DotNet {
+﻿namespace MaterialSkin2DotNet
+{
 
     using MaterialSkin2DotNet.Controls;
     using MaterialSkin2DotNet.Properties;
@@ -10,7 +11,8 @@
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
 
-    public class MaterialSkinManager {
+    public class MaterialSkinManager
+    {
         private static MaterialSkinManager _instance;
 
         private readonly List<MaterialForm> _formsToManage = new List<MaterialForm>();
@@ -31,7 +33,8 @@
         public int FORM_PADDING = 14;
 
         // Constructor
-        public MaterialSkinManager() {
+        private MaterialSkinManager()
+        {
             Theme = Themes.LIGHT;
             ColorScheme = new ColorScheme(Primary.Indigo500, Primary.Indigo700, Primary.Indigo100, Accent.Pink200, TextShade.WHITE);
 
@@ -48,7 +51,8 @@
             addFont(Resources.Roboto_Black);
 
             RobotoFontFamilies = new Dictionary<string, FontFamily>();
-            foreach (FontFamily ff in privateFontCollection.Families.ToArray()) {
+            foreach (FontFamily ff in privateFontCollection.Families.ToArray())
+            {
                 RobotoFontFamilies.Add(ff.Name.Replace(' ', '_'), ff);
             }
 
@@ -62,6 +66,7 @@
             logicalFonts.Add("H6", createLogicalFont("Roboto Medium", 20, NativeTextRenderer.logFontWeight.FW_MEDIUM));
             logicalFonts.Add("Subtitle1", createLogicalFont("Roboto", 16, NativeTextRenderer.logFontWeight.FW_REGULAR));
             logicalFonts.Add("Subtitle2", createLogicalFont("Roboto Medium", 14, NativeTextRenderer.logFontWeight.FW_MEDIUM));
+            logicalFonts.Add("SubtleEmphasis", createLogicalFont("Roboto", 12, NativeTextRenderer.logFontWeight.FW_NORMAL, 1));
             logicalFonts.Add("Body1", createLogicalFont("Roboto", 16, NativeTextRenderer.logFontWeight.FW_REGULAR));
             logicalFonts.Add("Body2", createLogicalFont("Roboto", 14, NativeTextRenderer.logFontWeight.FW_REGULAR));
             logicalFonts.Add("Button", createLogicalFont("Roboto Medium", 14, NativeTextRenderer.logFontWeight.FW_MEDIUM));
@@ -76,9 +81,11 @@
         }
 
         // Destructor
-        ~MaterialSkinManager() {
+        ~MaterialSkinManager()
+        {
             // RemoveFontMemResourceEx
-            foreach (IntPtr handle in logicalFonts.Values) {
+            foreach (IntPtr handle in logicalFonts.Values)
+            {
                 NativeTextRenderer.DeleteObject(handle);
             }
         }
@@ -86,9 +93,11 @@
         // Themes
         private Themes _theme;
 
-        public Themes Theme {
+        public Themes Theme
+        {
             get { return _theme; }
-            set {
+            set
+            {
                 _theme = value;
                 UpdateBackgrounds();
                 ThemeChanged?.Invoke(this);
@@ -97,23 +106,25 @@
 
         private ColorScheme _colorScheme;
 
-        public ColorScheme ColorScheme {
+        public ColorScheme ColorScheme
+        {
             get { return _colorScheme; }
-            set {
+            set
+            {
                 _colorScheme = value;
                 UpdateBackgrounds();
                 ColorSchemeChanged?.Invoke(this);
             }
         }
 
-        public enum Themes : byte {
+        public enum Themes : byte
+        {
             LIGHT,
             DARK
         }
 
         // Text
         private static readonly Color TEXT_HIGH_EMPHASIS_LIGHT = Color.FromArgb(222, 255, 255, 255); // Alpha 87%
-
         private static readonly Brush TEXT_HIGH_EMPHASIS_LIGHT_BRUSH = new SolidBrush(TEXT_HIGH_EMPHASIS_LIGHT);
         private static readonly Color TEXT_HIGH_EMPHASIS_DARK = Color.FromArgb(222, 0, 0, 0); // Alpha 87%
         private static readonly Brush TEXT_HIGH_EMPHASIS_DARK_BRUSH = new SolidBrush(TEXT_HIGH_EMPHASIS_DARK);
@@ -135,7 +146,6 @@
 
         // Dividers and thin lines
         private static readonly Color DIVIDERS_LIGHT = Color.FromArgb(30, 255, 255, 255); // Alpha 30%
-
         private static readonly Brush DIVIDERS_LIGHT_BRUSH = new SolidBrush(DIVIDERS_LIGHT);
         private static readonly Color DIVIDERS_DARK = Color.FromArgb(30, 0, 0, 0); // Alpha 30%
         private static readonly Brush DIVIDERS_DARK_BRUSH = new SolidBrush(DIVIDERS_DARK);
@@ -146,7 +156,6 @@
 
         // Checkbox / Radio / Switches
         private static readonly Color CHECKBOX_OFF_LIGHT = Color.FromArgb(138, 0, 0, 0);
-
         private static readonly Brush CHECKBOX_OFF_LIGHT_BRUSH = new SolidBrush(CHECKBOX_OFF_LIGHT);
         private static readonly Color CHECKBOX_OFF_DARK = Color.FromArgb(179, 255, 255, 255);
         private static readonly Brush CHECKBOX_OFF_DARK_BRUSH = new SolidBrush(CHECKBOX_OFF_DARK);
@@ -157,7 +166,6 @@
 
         // Switch specific
         private static readonly Color SWITCH_OFF_THUMB_LIGHT = Color.FromArgb(255, 255, 255, 255);
-
         private static readonly Color SWITCH_OFF_THUMB_DARK = Color.FromArgb(255, 190, 190, 190);
         private static readonly Color SWITCH_OFF_TRACK_LIGHT = Color.FromArgb(100, 0, 0, 0);
         private static readonly Color SWITCH_OFF_TRACK_DARK = Color.FromArgb(100, 255, 255, 255);
@@ -166,7 +174,6 @@
 
         // Generic back colors - for user controls
         private static readonly Color BACKGROUND_LIGHT = Color.FromArgb(255, 255, 255, 255);
-
         private static readonly Brush BACKGROUND_LIGHT_BRUSH = new SolidBrush(BACKGROUND_LIGHT);
         private static readonly Color BACKGROUND_DARK = Color.FromArgb(255, 80, 80, 80);
         private static readonly Brush BACKGROUND_DARK_BRUSH = new SolidBrush(BACKGROUND_DARK);
@@ -193,27 +200,23 @@
 
         //Expansion Panel colors
         private static readonly Color EXPANSIONPANEL_FOCUS_LIGHT = Color.FromArgb(255, 242, 242, 242);
-
         private static readonly Brush EXPANSIONPANEL_FOCUS_LIGHT_BRUSH = new SolidBrush(EXPANSIONPANEL_FOCUS_LIGHT);
         private static readonly Color EXPANSIONPANEL_FOCUS_DARK = Color.FromArgb(255, 50, 50, 50);
         private static readonly Brush EXPANSIONPANEL_FOCUS_DARK_BRUSH = new SolidBrush(EXPANSIONPANEL_FOCUS_DARK);
 
         // Backdrop colors - for containers, like forms or panels
         private static readonly Color BACKDROP_LIGHT = Color.FromArgb(255, 242, 242, 242);
-
         private static readonly Brush BACKDROP_LIGHT_BRUSH = new SolidBrush(BACKGROUND_LIGHT);
         private static readonly Color BACKDROP_DARK = Color.FromArgb(255, 50, 50, 50);
         private static readonly Brush BACKDROP_DARK_BRUSH = new SolidBrush(BACKGROUND_DARK);
 
         //Other colors
         private static readonly Color CARD_BLACK = Color.FromArgb(255, 42, 42, 42);
-
         private static readonly Color CARD_WHITE = Color.White;
 
         // Getters - Using these makes handling the dark theme switching easier
         // Text
         public Color TextHighEmphasisColor => Theme == Themes.LIGHT ? TEXT_HIGH_EMPHASIS_DARK : TEXT_HIGH_EMPHASIS_LIGHT;
-
         public Brush TextHighEmphasisBrush => Theme == Themes.LIGHT ? TEXT_HIGH_EMPHASIS_DARK_BRUSH : TEXT_HIGH_EMPHASIS_LIGHT_BRUSH;
         public Color TextHighEmphasisNoAlphaColor => Theme == Themes.LIGHT ? TEXT_HIGH_EMPHASIS_DARK_NOALPHA : TEXT_HIGH_EMPHASIS_LIGHT_NOALPHA;
         public Brush TextHighEmphasisNoAlphaBrush => Theme == Themes.LIGHT ? TEXT_HIGH_EMPHASIS_DARK_NOALPHA_BRUSH : TEXT_HIGH_EMPHASIS_LIGHT_NOALPHA_BRUSH;
@@ -224,28 +227,24 @@
 
         // Divider
         public Color DividersColor => Theme == Themes.LIGHT ? DIVIDERS_DARK : DIVIDERS_LIGHT;
-
         public Brush DividersBrush => Theme == Themes.LIGHT ? DIVIDERS_DARK_BRUSH : DIVIDERS_LIGHT_BRUSH;
         public Color DividersAlternativeColor => Theme == Themes.LIGHT ? DIVIDERS_ALTERNATIVE_DARK : DIVIDERS_ALTERNATIVE_LIGHT;
         public Brush DividersAlternativeBrush => Theme == Themes.LIGHT ? DIVIDERS_ALTERNATIVE_DARK_BRUSH : DIVIDERS_ALTERNATIVE_LIGHT_BRUSH;
 
         // Checkbox / Radio / Switch
         public Color CheckboxOffColor => Theme == Themes.LIGHT ? CHECKBOX_OFF_LIGHT : CHECKBOX_OFF_DARK;
-
         public Brush CheckboxOffBrush => Theme == Themes.LIGHT ? CHECKBOX_OFF_LIGHT_BRUSH : CHECKBOX_OFF_DARK_BRUSH;
         public Color CheckBoxOffDisabledColor => Theme == Themes.LIGHT ? CHECKBOX_OFF_DISABLED_LIGHT : CHECKBOX_OFF_DISABLED_DARK;
         public Brush CheckBoxOffDisabledBrush => Theme == Themes.LIGHT ? CHECKBOX_OFF_DISABLED_LIGHT_BRUSH : CHECKBOX_OFF_DISABLED_DARK_BRUSH;
 
         // Switch
         public Color SwitchOffColor => Theme == Themes.LIGHT ? CHECKBOX_OFF_DARK : CHECKBOX_OFF_LIGHT; // yes, I re-use the checkbox color, sue me
-
         public Color SwitchOffThumbColor => Theme == Themes.LIGHT ? SWITCH_OFF_THUMB_LIGHT : SWITCH_OFF_THUMB_DARK;
         public Color SwitchOffTrackColor => Theme == Themes.LIGHT ? SWITCH_OFF_TRACK_LIGHT : SWITCH_OFF_TRACK_DARK;
         public Color SwitchOffDisabledThumbColor => Theme == Themes.LIGHT ? SWITCH_OFF_DISABLED_THUMB_LIGHT : SWITCH_OFF_DISABLED_THUMB_DARK;
 
         // Control Back colors
         public Color BackgroundColor => Theme == Themes.LIGHT ? BACKGROUND_LIGHT : BACKGROUND_DARK;
-
         public Brush BackgroundBrush => Theme == Themes.LIGHT ? BACKGROUND_LIGHT_BRUSH : BACKGROUND_DARK_BRUSH;
         public Color BackgroundAlternativeColor => Theme == Themes.LIGHT ? BACKGROUND_ALTERNATIVE_LIGHT : BACKGROUND_ALTERNATIVE_DARK;
         public Brush BackgroundAlternativeBrush => Theme == Themes.LIGHT ? BACKGROUND_ALTERNATIVE_LIGHT_BRUSH : BACKGROUND_ALTERNATIVE_DARK_BRUSH;
@@ -259,19 +258,25 @@
         public Color BackgroundFocusColor => Theme == Themes.LIGHT ? BACKGROUND_FOCUS_LIGHT : BACKGROUND_FOCUS_DARK;
         public Brush BackgroundFocusBrush => Theme == Themes.LIGHT ? BACKGROUND_FOCUS_LIGHT_BRUSH : BACKGROUND_FOCUS_DARK_BRUSH;
 
+
         // Other color
         public Color CardsColor => Theme == Themes.LIGHT ? CARD_WHITE : CARD_BLACK;
 
         // Expansion Panel color/brush
         public Brush ExpansionPanelFocusBrush => Theme == Themes.LIGHT ? EXPANSIONPANEL_FOCUS_LIGHT_BRUSH : EXPANSIONPANEL_FOCUS_DARK_BRUSH;
 
+        // SnackBar
+        public Color SnackBarTextHighEmphasisColor => Theme != Themes.LIGHT ? TEXT_HIGH_EMPHASIS_DARK : TEXT_HIGH_EMPHASIS_LIGHT;
+        public Color SnackBarBackgroundColor => Theme != Themes.LIGHT ? BACKGROUND_LIGHT : BACKGROUND_DARK;
+        public Color SnackBarTextButtonNoAccentTextColor => Theme != Themes.LIGHT ? ColorScheme.PrimaryColor : ColorScheme.LightPrimaryColor;
+
         // Backdrop color
         public Color BackdropColor => Theme == Themes.LIGHT ? BACKDROP_LIGHT : BACKDROP_DARK;
-
         public Brush BackdropBrush => Theme == Themes.LIGHT ? BACKDROP_LIGHT_BRUSH : BACKDROP_DARK_BRUSH;
 
         // Font Handling
-        public enum fontType {
+        public enum fontType
+        {
             H1,
             H2,
             H3,
@@ -280,6 +285,7 @@
             H6,
             Subtitle1,
             Subtitle2,
+            SubtleEmphasis,
             Body1,
             Body2,
             Button,
@@ -287,8 +293,10 @@
             Overline
         }
 
-        public Font getFontByType(fontType type) {
-            switch (type) {
+        public Font getFontByType(fontType type)
+        {
+            switch (type)
+            {
                 case fontType.H1:
                     return new Font(RobotoFontFamilies["Roboto_Light"], 96f, FontStyle.Regular, GraphicsUnit.Pixel);
 
@@ -313,6 +321,9 @@
                 case fontType.Subtitle2:
                     return new Font(RobotoFontFamilies["Roboto_Medium"], 14f, FontStyle.Bold, GraphicsUnit.Pixel);
 
+                case fontType.SubtleEmphasis:
+                    return new Font(RobotoFontFamilies["Roboto"], 12f, FontStyle.Italic, GraphicsUnit.Pixel);
+
                 case fontType.Body1:
                     return new Font(RobotoFontFamilies["Roboto"], 14f, FontStyle.Regular, GraphicsUnit.Pixel);
 
@@ -336,7 +347,8 @@
         /// </summary>
         /// <param name="size">font size, ranges from 12 up to 16</param>
         /// <returns></returns>
-        public IntPtr getTextBoxFontBySize(int size) {
+        public IntPtr getTextBoxFontBySize(int size)
+        {
             string name = "textBox" + Math.Min(16, Math.Max(12, size)).ToString();
             return logicalFonts[name];
         }
@@ -346,7 +358,8 @@
         /// </summary>
         /// <param name="type">material design font type</param>
         /// <returns></returns>
-        public IntPtr getLogFontByType(fontType type) {
+        public IntPtr getLogFontByType(fontType type)
+        {
             return logicalFonts[Enum.GetName(typeof(fontType), type)];
         }
 
@@ -357,7 +370,8 @@
 
         private PrivateFontCollection privateFontCollection = new PrivateFontCollection();
 
-        private void addFont(byte[] fontdata) {
+        private void addFont(byte[] fontdata)
+        {
             // Add font to system table in memory
             int dataLength = fontdata.Length;
 
@@ -371,39 +385,47 @@
             privateFontCollection.AddMemoryFont(ptrFont, dataLength);
         }
 
-        private IntPtr createLogicalFont(string fontName, int size, NativeTextRenderer.logFontWeight weight) {
+        private IntPtr createLogicalFont(string fontName, int size, NativeTextRenderer.logFontWeight weight, byte lfItalic = 0)
+        {
             // Logical font:
             NativeTextRenderer.LogFont lfont = new NativeTextRenderer.LogFont();
             lfont.lfFaceName = fontName;
             lfont.lfHeight = -size;
             lfont.lfWeight = (int)weight;
+            lfont.lfItalic = lfItalic;
             return NativeTextRenderer.CreateFontIndirect(lfont);
         }
 
         // Dyanmic Themes
-        public void AddFormToManage(MaterialForm materialForm) {
+        public void AddFormToManage(MaterialForm materialForm)
+        {
             _formsToManage.Add(materialForm);
             UpdateBackgrounds();
 
             // Set background on newly added controls
-            materialForm.ControlAdded += (sender, e) => {
+            materialForm.ControlAdded += (sender, e) =>
+            {
                 UpdateControlBackColor(e.Control, BackdropColor);
             };
         }
 
-        public void RemoveFormToManage(MaterialForm materialForm) {
+        public void RemoveFormToManage(MaterialForm materialForm)
+        {
             _formsToManage.Remove(materialForm);
         }
 
-        private void UpdateBackgrounds() {
+        private void UpdateBackgrounds()
+        {
             var newBackColor = BackdropColor;
-            foreach (var materialForm in _formsToManage) {
+            foreach (var materialForm in _formsToManage)
+            {
                 materialForm.BackColor = newBackColor;
                 UpdateControlBackColor(materialForm, newBackColor);
             }
         }
 
-        private void UpdateControlBackColor(Control controlToUpdate, Color newBackColor) {
+        private void UpdateControlBackColor(Control controlToUpdate, Color newBackColor)
+        {
             // No control
             if (controlToUpdate == null) return;
 
@@ -411,43 +433,52 @@
             if (controlToUpdate.ContextMenuStrip != null) UpdateToolStrip(controlToUpdate.ContextMenuStrip, newBackColor);
 
             // Material Tabcontrol pages
-            if (controlToUpdate is TabPage) {
+            if (controlToUpdate is TabPage)
+            {
                 ((TabPage)controlToUpdate).BackColor = newBackColor;
             }
 
             // Material Divider
-            else if (controlToUpdate is MaterialDivider) {
+            else if (controlToUpdate is MaterialDivider)
+            {
                 controlToUpdate.BackColor = DividersColor;
             }
 
             // Other Material Skin control
-            else if (controlToUpdate.IsMaterialControl()) {
+            else if (controlToUpdate.IsMaterialControl())
+            {
                 controlToUpdate.BackColor = newBackColor;
                 controlToUpdate.ForeColor = TextHighEmphasisColor;
             }
 
             // Other Generic control not part of material skin
-            else if (EnforceBackcolorOnAllComponents && controlToUpdate.HasProperty("BackColor") && !controlToUpdate.IsMaterialControl() && controlToUpdate.Parent != null) {
+            else if (EnforceBackcolorOnAllComponents && controlToUpdate.HasProperty("BackColor") && !controlToUpdate.IsMaterialControl() && controlToUpdate.Parent != null)
+            {
                 controlToUpdate.BackColor = controlToUpdate.Parent.BackColor;
                 controlToUpdate.ForeColor = TextHighEmphasisColor;
                 controlToUpdate.Font = getFontByType(MaterialSkinManager.fontType.Body1);
             }
 
             // Recursive call to control's children
-            foreach (Control control in controlToUpdate.Controls) {
+            foreach (Control control in controlToUpdate.Controls)
+            {
                 UpdateControlBackColor(control, newBackColor);
             }
         }
 
-        private void UpdateToolStrip(ToolStrip toolStrip, Color newBackColor) {
-            if (toolStrip == null) {
+        private void UpdateToolStrip(ToolStrip toolStrip, Color newBackColor)
+        {
+            if (toolStrip == null)
+            {
                 return;
             }
 
             toolStrip.BackColor = newBackColor;
-            foreach (ToolStripItem control in toolStrip.Items) {
+            foreach (ToolStripItem control in toolStrip.Items)
+            {
                 control.BackColor = newBackColor;
-                if (control is MaterialToolStripMenuItem && (control as MaterialToolStripMenuItem).HasDropDown) {
+                if (control is MaterialToolStripMenuItem && (control as MaterialToolStripMenuItem).HasDropDown)
+                {
                     //recursive call
                     UpdateToolStrip((control as MaterialToolStripMenuItem).DropDown, newBackColor);
                 }

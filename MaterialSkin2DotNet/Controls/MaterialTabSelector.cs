@@ -6,10 +6,11 @@
     using System.ComponentModel;
     using System.Drawing;
     using System.Drawing.Text;
+    using System.Globalization;
     using System.Windows.Forms;
 
-    public class MaterialTabSelector : Control, IMaterialControl {
-
+    public class MaterialTabSelector : Control, IMaterialControl
+    {
         [Browsable(false)]
         public int Depth { get; set; }
 
@@ -19,29 +20,50 @@
         [Browsable(false)]
         public MouseState MouseState { get; set; }
 
+        //[Browsable(false)]
+        public enum CustomCharacterCasing
+        {
+            [Description("Text will be used as user inserted, no alteration")]
+            Normal,
+            [Description("Text will be converted to UPPER case")]
+            Upper,
+            [Description("Text will be converted to lower case")]
+            Lower,
+            [Description("Text will be converted to Proper case (aka Title case)")]
+            Proper
+        }
+
+        TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+
         private MaterialTabControl _baseTabControl;
 
         [Category("Material Skin"), Browsable(true)]
-        public MaterialTabControl BaseTabControl {
+        public MaterialTabControl BaseTabControl
+        {
             get { return _baseTabControl; }
-            set {
+            set
+            {
                 _baseTabControl = value;
                 if (_baseTabControl == null) return;
 
                 UpdateTabRects();
 
                 _previousSelectedTabIndex = _baseTabControl.SelectedIndex;
-                _baseTabControl.Deselected += (sender, args) => {
+                _baseTabControl.Deselected += (sender, args) =>
+                {
                     _previousSelectedTabIndex = _baseTabControl.SelectedIndex;
                 };
-                _baseTabControl.SelectedIndexChanged += (sender, args) => {
+                _baseTabControl.SelectedIndexChanged += (sender, args) =>
+                {
                     _animationManager.SetProgress(0);
                     _animationManager.StartNewAnimation(AnimationDirection.In);
                 };
-                _baseTabControl.ControlAdded += delegate {
+                _baseTabControl.ControlAdded += delegate
+                {
                     Invalidate();
                 };
-                _baseTabControl.ControlRemoved += delegate {
+                _baseTabControl.ControlRemoved += delegate
+                {
                     Invalidate();
                 };
             }
@@ -56,40 +78,58 @@
         private List<Rectangle> _tabRects;
 
         private const int ICON_SIZE = 24;
-        private const int FIRST_TAB_PADDING = 80;
+        private const int FIRST_TAB_PADDING = 50;
         private const int TAB_HEADER_PADDING = 24;
         private const int TAB_WIDTH_MIN = 160;
         private const int TAB_WIDTH_MAX = 264;
 
         private int _tab_over_index = -1;
 
+        private CustomCharacterCasing _characterCasing;
+
+        [Category("Appearance")]
+        public CustomCharacterCasing CharacterCasing
+        {
+            get => _characterCasing;
+            set
+            {
+                _characterCasing = value;
+                _baseTabControl.Invalidate();
+                Invalidate();
+            }
+        }
         private int _tab_indicator_height;
 
         [Category("Material Skin"), Browsable(true), DisplayName("Tab Indicator Height"), DefaultValue(2)]
-        public int TabIndicatorHeight {
+        public int TabIndicatorHeight
+        {
             get { return _tab_indicator_height; }
-            set {
+            set
+            {
                 if (value < 1)
                     throw new ArgumentOutOfRangeException("Tab Indicator Height", value, "Value should be > 0");
-                else {
+                else
+                {
                     _tab_indicator_height = value;
                     Refresh();
                 }
             }
         }
 
-        public enum TabLabelStyle {
+        public enum TabLabelStyle
+        {
             Text,
             Icon,
             IconAndText,
         }
 
         private TabLabelStyle _tabLabel;
-
         [Category("Material Skin"), Browsable(true), DisplayName("Tab Label"), DefaultValue(TabLabelStyle.Text)]
-        public TabLabelStyle TabLabel {
+        public TabLabelStyle TabLabel
+        {
             get { return _tabLabel; }
-            set {
+            set
+            {
                 _tabLabel = value;
                 if (_tabLabel == TabLabelStyle.IconAndText)
                     Height = 72;
@@ -100,26 +140,31 @@
             }
         }
 
-        public MaterialTabSelector() {
+
+        public MaterialTabSelector()
+        {
             SetStyle(ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer, true);
             TabIndicatorHeight = 2;
             TabLabel = TabLabelStyle.Text;
 
             Size = new Size(480, 48);
 
-            _animationManager = new AnimationManager {
+            _animationManager = new AnimationManager
+            {
                 AnimationType = AnimationType.EaseOut,
                 Increment = 0.04
             };
             _animationManager.OnAnimationProgress += sender => Invalidate();
         }
 
-        protected override void OnCreateControl() {
+        protected override void OnCreateControl()
+        {
             base.OnCreateControl();
             Font = SkinManager.getFontByType(MaterialSkinManager.fontType.Body1);
         }
 
-        protected override void OnPaint(PaintEventArgs e) {
+        protected override void OnPaint(PaintEventArgs e)
+        {
             var g = e.Graphics;
             g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 
@@ -133,7 +178,8 @@
             var animationProgress = _animationManager.GetProgress();
 
             //Click feedback
-            if (_animationManager.IsAnimating()) {
+            if (_animationManager.IsAnimating())
+            {
                 var rippleBrush = new SolidBrush(Color.FromArgb((int)(51 - (animationProgress * 50)), Color.White));
                 var rippleSize = (int)(animationProgress * _tabRects[_baseTabControl.SelectedIndex].Width * 1.75);
 
@@ -144,40 +190,53 @@
             }
 
             //Draw tab headers
-            if (_tab_over_index >= 0) {
+            if (_tab_over_index >= 0)
+            {
                 //Change mouse over tab background color
                 g.FillRectangle(SkinManager.BackgroundHoverBrush, _tabRects[_tab_over_index].X, _tabRects[_tab_over_index].Y, _tabRects[_tab_over_index].Width, _tabRects[_tab_over_index].Height - _tab_indicator_height);
             }
 
-            foreach (TabPage tabPage in _baseTabControl.TabPages) {
+            foreach (TabPage tabPage in _baseTabControl.TabPages)
+            {
                 var currentTabIndex = _baseTabControl.TabPages.IndexOf(tabPage);
 
-                if (_tabLabel != TabLabelStyle.Icon) {
+                if (_tabLabel != TabLabelStyle.Icon)
+                {
                     // Text
-                    using (NativeTextRenderer NativeText = new NativeTextRenderer(g)) {
+                    using (NativeTextRenderer NativeText = new NativeTextRenderer(g))
+                    {
                         Size textSize = TextRenderer.MeasureText(_baseTabControl.TabPages[currentTabIndex].Text, Font);
                         Rectangle textLocation = new Rectangle(_tabRects[currentTabIndex].X + (TAB_HEADER_PADDING / 2), _tabRects[currentTabIndex].Y, _tabRects[currentTabIndex].Width - (TAB_HEADER_PADDING), _tabRects[currentTabIndex].Height);
 
-                        if (_tabLabel == TabLabelStyle.IconAndText) {
+                        if (_tabLabel == TabLabelStyle.IconAndText)
+                        {
                             textLocation.Y = 46;
                             textLocation.Height = 10;
                         }
 
-                        if (((TAB_HEADER_PADDING * 2) + textSize.Width < TAB_WIDTH_MAX)) {
+                        if (((TAB_HEADER_PADDING * 2) + textSize.Width < TAB_WIDTH_MAX))
+                        {
                             NativeText.DrawTransparentText(
-                            tabPage.Text.ToUpper(),
+                            CharacterCasing == CustomCharacterCasing.Upper ? tabPage.Text.ToUpper() :
+                            CharacterCasing == CustomCharacterCasing.Lower ? tabPage.Text.ToLower() :
+                            CharacterCasing == CustomCharacterCasing.Proper ? textInfo.ToTitleCase(tabPage.Text.ToLower()) : tabPage.Text,
                             Font,
                             Color.FromArgb(CalculateTextAlpha(currentTabIndex, animationProgress), SkinManager.ColorScheme.TextColor),
                             textLocation.Location,
                             textLocation.Size,
                             NativeTextRenderer.TextAlignFlags.Center | NativeTextRenderer.TextAlignFlags.Middle);
-                        } else {
-                            if (_tabLabel == TabLabelStyle.IconAndText) {
+                        }
+                        else
+                        {
+                            if (_tabLabel == TabLabelStyle.IconAndText)
+                            {
                                 textLocation.Y = 40;
                                 textLocation.Height = 26;
                             }
                             NativeText.DrawMultilineTransparentText(
-                            tabPage.Text.ToUpper(),
+                            CharacterCasing == CustomCharacterCasing.Upper ? tabPage.Text.ToUpper() :
+                            CharacterCasing == CustomCharacterCasing.Lower ? tabPage.Text.ToLower() :
+                            CharacterCasing == CustomCharacterCasing.Proper ? textInfo.ToTitleCase(tabPage.Text.ToLower()) : tabPage.Text,
                             SkinManager.getFontByType(MaterialSkinManager.fontType.Body2),
                             Color.FromArgb(CalculateTextAlpha(currentTabIndex, animationProgress), SkinManager.ColorScheme.TextColor),
                             textLocation.Location,
@@ -187,14 +246,17 @@
                     }
                 }
 
-                if (_tabLabel != TabLabelStyle.Text) {
+                if (_tabLabel != TabLabelStyle.Text)
+                {
                     // Icons
-                    if (_baseTabControl.ImageList != null && (!String.IsNullOrEmpty(tabPage.ImageKey) | tabPage.ImageIndex > -1)) {
+                    if (_baseTabControl.ImageList != null && (!String.IsNullOrEmpty(tabPage.ImageKey) | tabPage.ImageIndex > -1))
+                    {
                         Rectangle iconRect = new Rectangle(
                             _tabRects[currentTabIndex].X + (_tabRects[currentTabIndex].Width / 2) - (ICON_SIZE / 2),
                             _tabRects[currentTabIndex].Y + (_tabRects[currentTabIndex].Height / 2) - (ICON_SIZE / 2),
                             ICON_SIZE, ICON_SIZE);
-                        if (_tabLabel == TabLabelStyle.IconAndText) {
+                        if (_tabLabel == TabLabelStyle.IconAndText)
+                        {
                             iconRect.Y = 12;
                         }
                         g.DrawImage(!String.IsNullOrEmpty(tabPage.ImageKey) ? _baseTabControl.ImageList.Images[tabPage.ImageKey] : _baseTabControl.ImageList.Images[tabPage.ImageIndex], iconRect);
@@ -214,28 +276,35 @@
             g.FillRectangle(SkinManager.ColorScheme.AccentBrush, x, y, width, _tab_indicator_height);
         }
 
-        private int CalculateTextAlpha(int tabIndex, double animationProgress) {
+        private int CalculateTextAlpha(int tabIndex, double animationProgress)
+        {
             int primaryA = SkinManager.TextHighEmphasisColor.A;
             int secondaryA = SkinManager.TextMediumEmphasisColor.A;
 
-            if (tabIndex == _baseTabControl.SelectedIndex && !_animationManager.IsAnimating()) {
+            if (tabIndex == _baseTabControl.SelectedIndex && !_animationManager.IsAnimating())
+            {
                 return primaryA;
             }
-            if (tabIndex != _previousSelectedTabIndex && tabIndex != _baseTabControl.SelectedIndex) {
+            if (tabIndex != _previousSelectedTabIndex && tabIndex != _baseTabControl.SelectedIndex)
+            {
                 return secondaryA;
             }
-            if (tabIndex == _previousSelectedTabIndex) {
+            if (tabIndex == _previousSelectedTabIndex)
+            {
                 return primaryA - (int)((primaryA - secondaryA) * animationProgress);
             }
             return secondaryA + (int)((primaryA - secondaryA) * animationProgress);
         }
 
-        protected override void OnMouseUp(MouseEventArgs e) {
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
             base.OnMouseUp(e);
 
             if (_tabRects == null) UpdateTabRects();
-            for (var i = 0; i < _tabRects.Count; i++) {
-                if (_tabRects[i].Contains(e.Location)) {
+            for (var i = 0; i < _tabRects.Count; i++)
+            {
+                if (_tabRects[i].Contains(e.Location))
+                {
                     _baseTabControl.SelectedIndex = i;
                 }
             }
@@ -243,7 +312,8 @@
             _animationSource = e.Location;
         }
 
-        protected override void OnMouseMove(MouseEventArgs e) {
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
             base.OnMouseMove(e);
 
             if (DesignMode)
@@ -254,8 +324,10 @@
 
             int old_tab_over_index = _tab_over_index;
             _tab_over_index = -1;
-            for (var i = 0; i < _tabRects.Count; i++) {
-                if (_tabRects[i].Contains(e.Location)) {
+            for (var i = 0; i < _tabRects.Count; i++)
+            {
+                if (_tabRects[i].Contains(e.Location))
+                {
                     Cursor = Cursors.Hand;
                     _tab_over_index = i;
                     break;
@@ -267,7 +339,8 @@
                 Invalidate();
         }
 
-        protected override void OnMouseLeave(EventArgs e) {
+        protected override void OnMouseLeave(EventArgs e)
+        {
             base.OnMouseLeave(e);
             if (DesignMode)
                 return;
@@ -280,7 +353,8 @@
             Invalidate();
         }
 
-        private void UpdateTabRects() {
+        private void UpdateTabRects()
+        {
             _tabRects = new List<Rectangle>();
 
             //If there isn't a base tab control, the rects shouldn't be calculated
@@ -288,10 +362,14 @@
             if (_baseTabControl == null || _baseTabControl.TabCount == 0) return;
 
             //Calculate the bounds of each tab header specified in the base tab control
-            using (var b = new Bitmap(1, 1)) {
-                using (var g = Graphics.FromImage(b)) {
-                    using (NativeTextRenderer NativeText = new NativeTextRenderer(g)) {
-                        for (int i = 0; i < _baseTabControl.TabPages.Count; i++) {
+            using (var b = new Bitmap(1, 1))
+            {
+                using (var g = Graphics.FromImage(b))
+                {
+                    using (NativeTextRenderer NativeText = new NativeTextRenderer(g))
+                    {
+                        for (int i = 0; i < _baseTabControl.TabPages.Count; i++)
+                        {
                             Size textSize = TextRenderer.MeasureText(_baseTabControl.TabPages[i].Text, Font);
                             if (_tabLabel == TabLabelStyle.Icon) textSize.Width = ICON_SIZE;
 

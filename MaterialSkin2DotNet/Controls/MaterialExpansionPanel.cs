@@ -1,7 +1,4 @@
-using MaterialSkin2DotNet.Animations;
 using System;
-using System.Configuration;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -29,20 +26,20 @@ namespace MaterialSkin2DotNet.Controls
         private const int _footerHeight = 68;
         private const int _footerButtonHeight = 36;
         private const int _minHeight = 200;
-        private int _headerHeight ;
+        private int _headerHeight;
 
-        private bool _collapse ;
+        private bool _collapse;
         private bool _useAccentColor;
         private int _expandHeight;
-									
-									  
+
+
         private string _titleHeader;
         private string _descriptionHeader;
         private string _validationButtonText;
         private string _cancelButtonText;
-										
-																 
-										  
+
+
+
         private bool _showValidationButtons;
         private bool _showCollapseExpand;
         private bool _drawShadows;
@@ -231,9 +228,9 @@ namespace MaterialSkin2DotNet.Controls
             ForeColor = SkinManager.TextHighEmphasisColor;
 
             Padding = new Padding(24, 64, 24, 16);
-            Margin = new Padding( 3, 16,  3, 16);
+            Margin = new Padding(3, 16, 3, 16);
             Size = new Size(480, ExpandHeight);
-            							 
+
             //CollapseOrExpand();
 
             _validationButton = new MaterialButton
@@ -254,18 +251,18 @@ namespace MaterialSkin2DotNet.Controls
                 Text = "CANCEL"
             };
 
-            if (!Controls.Contains(_validationButton) )
+            if (!Controls.Contains(_validationButton))
             {
                 Controls.Add(_validationButton);
             }
-           if (!Controls.Contains(_cancelButton) )
+            if (!Controls.Contains(_cancelButton))
             {
                 Controls.Add(_cancelButton);
             }
 
             _validationButton.Click += _validationButton_Click;
             _cancelButton.Click += _cancelButton_Click;
-	    
+
             UpdateRects();
         }
 
@@ -383,7 +380,7 @@ namespace MaterialSkin2DotNet.Controls
             UpdateRects();
 
             if (Parent != null)
-            { 
+            {
                 RemoveShadowPaintEvent(Parent, drawShadowOnParent);
                 AddShadowPaintEvent(Parent, drawShadowOnParent);
             }
@@ -435,7 +432,7 @@ namespace MaterialSkin2DotNet.Controls
                     return;
             }
 
-             base.OnMouseDown(e);
+            base.OnMouseDown(e);
         }
 
         protected override void OnMouseLeave(EventArgs e)
@@ -484,7 +481,7 @@ namespace MaterialSkin2DotNet.Controls
                     expansionPanelBorderRectF.X -= 0.5f;
                     expansionPanelBorderRectF.Y -= 0.5f;
                     GraphicsPath expansionPanelBoarderPath = DrawHelper.CreateRoundRect(expansionPanelBorderRectF, 2);
-																					   
+
                     g.FillPath(SkinManager.ExpansionPanelFocusBrush, expansionPanelBoarderPath);
                 }
                 else
@@ -517,13 +514,13 @@ namespace MaterialSkin2DotNet.Controls
             }
 
             if (!String.IsNullOrEmpty(_descriptionHeader))
-	    {
+            {
                 //Draw description header text 
 
                 Rectangle headerDescriptionRect = new Rectangle(
                     headerRect.Right + _expansionPanelDefaultPadding,
                     (_headerHeight - _textHeaderHeight) / 2,
-                    _expandcollapseBounds.Left - (headerRect.Right + _expansionPanelDefaultPadding ) - _expansionPanelDefaultPadding,
+                    _expandcollapseBounds.Left - (headerRect.Right + _expansionPanelDefaultPadding) - _expansionPanelDefaultPadding,
                     _textHeaderHeight);
 
                 using (NativeTextRenderer NativeText = new NativeTextRenderer(g))
@@ -539,7 +536,7 @@ namespace MaterialSkin2DotNet.Controls
                 }
             }
 
-            if (_showCollapseExpand==true)
+            if (_showCollapseExpand == true)
             {
                 using (var formButtonsPen = new Pen(_useAccentColor && Enabled ? SkinManager.ColorScheme.AccentColor : SkinManager.TextDisabledOrHintColor, 2))
                 {
@@ -633,6 +630,14 @@ namespace MaterialSkin2DotNet.Controls
                     _cancelButton.Text = _cancelButtonText;
                     _cancelButton.UseAccentColor = _useAccentColor;
                 }
+            }
+            if (_validationButton != null)
+            {
+                _validationButton.Visible = _showValidationButtons;
+            }
+            if (_cancelButton != null)
+            {
+                _cancelButton.Visible = _showValidationButtons;
             }
         }
 

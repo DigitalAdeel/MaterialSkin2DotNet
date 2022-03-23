@@ -4,12 +4,12 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <Description>Migration of MaterialSkin.2 (Leonardo C Bottaro) from .NET Framework Winforms to .NET Winforms also known as .NET Core Winforms. Minimum supported .NET Version is .NetCore 3.1. Latest .NET 6.0 Preview version is also supported.</Description>
-    <Copyright>Copyright Digital Adeel © 2020</Copyright>
+    <Copyright>Copyright Digital Adeel © 2020-22</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/DigitalAdeel/MaterialSkin2DotNet</PackageProjectUrl>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageIcon>nuget_icon2.png</PackageIcon>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageIcon>nuget_icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/DigitalAdeel/MaterialSkin2DotNet</RepositoryUrl>
     <PackageTags>materialskin, materialui, materialuinet,material,material design,design,net,net framework,winforms,win forms, theme</PackageTags>
     <PackageReleaseNotes>1.0.3
@@ -28,14 +28,29 @@ Tabs and Default ColorScheme Properties are added.
 First Ever Release.
 ------------------
 Same features mentioned at Leonardo's Repo.</PackageReleaseNotes>
-    <Authors>Digital Adeel, leocb, IgnaceMaes</Authors>
-    <Company>Digital Adeel</Company>
+    <Authors>DigitalAdeel, leocb, IgnaceMaes</Authors>
+    <Company>DASolutions</Company>
     <Owner>Digital Adeel</Owner>
-    <Version>1.0.3</Version>
+    <Version>1.1.2</Version>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <NeutralLanguage>en</NeutralLanguage>
+    <AssemblyVersion>1.1.2</AssemblyVersion>
+    <FileVersion>1.1.2</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="nuget_icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\nuget_icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

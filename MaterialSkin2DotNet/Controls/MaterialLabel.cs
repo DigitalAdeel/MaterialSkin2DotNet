@@ -4,8 +4,8 @@
     using System.Drawing;
     using System.Windows.Forms;
 
-    public class MaterialLabel : Label, IMaterialControl {
-
+    public class MaterialLabel : Label, IMaterialControl
+    {
         [Browsable(false)]
         public int Depth { get; set; }
 
@@ -18,11 +18,14 @@
         private ContentAlignment _TextAlign = ContentAlignment.TopLeft;
 
         [DefaultValue(typeof(ContentAlignment), "TopLeft")]
-        public override ContentAlignment TextAlign {
-            get {
+        public override ContentAlignment TextAlign
+        {
+            get
+            {
                 return _TextAlign;
             }
-            set {
+            set
+            {
                 _TextAlign = value;
                 updateAligment();
                 Invalidate();
@@ -41,39 +44,50 @@
 
         [Category("Material Skin"),
         DefaultValue(typeof(MaterialSkinManager.fontType), "Body1")]
-        public MaterialSkinManager.fontType FontType {
-            get {
+        public MaterialSkinManager.fontType FontType
+        {
+            get
+            {
                 return _fontType;
             }
-            set {
+            set
+            {
                 _fontType = value;
                 Font = SkinManager.getFontByType(_fontType);
                 Refresh();
             }
         }
 
-        public MaterialLabel() {
+        public MaterialLabel()
+        {
             FontType = MaterialSkinManager.fontType.Body1;
             TextAlign = ContentAlignment.TopLeft;
         }
 
-        public override Size GetPreferredSize(Size proposedSize) {
-            if (AutoSize) {
+        public override Size GetPreferredSize(Size proposedSize)
+        {
+            if (AutoSize)
+            {
                 Size strSize;
-                using (NativeTextRenderer NativeText = new NativeTextRenderer(CreateGraphics())) {
+                using (NativeTextRenderer NativeText = new NativeTextRenderer(CreateGraphics()))
+                {
                     strSize = NativeText.MeasureLogString(Text, SkinManager.getLogFontByType(_fontType));
                     strSize.Width += 1; // necessary to avoid a bug when autosize = true
                 }
                 return strSize;
-            } else {
+            }
+            else
+            {
                 return proposedSize;
             }
         }
 
         private NativeTextRenderer.TextAlignFlags Alignment;
 
-        private void updateAligment() {
-            switch (_TextAlign) {
+        private void updateAligment()
+        {
+            switch (_TextAlign)
+            {
                 case ContentAlignment.TopLeft:
                     Alignment = NativeTextRenderer.TextAlignFlags.Top | NativeTextRenderer.TextAlignFlags.Left;
                     break;
@@ -116,18 +130,22 @@
             }
         }
 
-        protected override void OnPaint(PaintEventArgs e) {
+        protected override void OnPaint(PaintEventArgs e)
+        {
             Graphics g = e.Graphics;
             g.Clear(Parent.BackColor);
 
             // Draw Text
-            using (NativeTextRenderer NativeText = new NativeTextRenderer(g)) {
+            using (NativeTextRenderer NativeText = new NativeTextRenderer(g))
+            {
                 NativeText.DrawMultilineTransparentText(
                     Text,
                     SkinManager.getLogFontByType(_fontType),
                     Enabled ? HighEmphasis ? UseAccent ?
                     SkinManager.ColorScheme.AccentColor : // High emphasis, accent
-                    SkinManager.ColorScheme.PrimaryColor : // High emphasis, primary
+                    (SkinManager.Theme == MaterialSkin2DotNet.MaterialSkinManager.Themes.LIGHT) ?
+                    SkinManager.ColorScheme.PrimaryColor : // High emphasis, primary Light theme
+                    SkinManager.ColorScheme.PrimaryColor.Lighten(0.25f) : // High emphasis, primary Dark theme
                     SkinManager.TextHighEmphasisColor : // Normal
                     SkinManager.TextDisabledOrHintColor, // Disabled
                     ClientRectangle.Location,
@@ -136,9 +154,9 @@
             }
         }
 
-        protected override void InitLayout() {
+        protected override void InitLayout()
+        {
             Font = SkinManager.getFontByType(_fontType);
-            BackColorChanged += (sender, args) => Refresh();
         }
     }
 }

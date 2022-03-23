@@ -45,7 +45,7 @@
             }
         }
 
-        private bool _mini ;
+        private bool _mini;
 
         [DefaultValue(false)]
         [Category("Material Skin"), DisplayName("Animate Show HideButton")]
@@ -187,7 +187,11 @@
             DrawHelper.DrawRoundShadow(g, fabBounds);
 
             // draw fab
-            g.FillEllipse(_mouseHover ? new SolidBrush(SkinManager.ColorScheme.AccentColor.Lighten(0.25f)) : SkinManager.ColorScheme.AccentBrush, fabBounds);
+            g.FillEllipse(Enabled ? _mouseHover ?
+                new SolidBrush(SkinManager.ColorScheme.AccentColor.Lighten(0.25f)) :
+                SkinManager.ColorScheme.AccentBrush :
+                new SolidBrush(DrawHelper.BlendColor(SkinManager.ColorScheme.AccentColor, SkinManager.SwitchOffDisabledThumbColor, 197)),
+                fabBounds);
 
             if (_animationManager.IsAnimating())
             {
@@ -259,7 +263,7 @@
 
         protected override void OnResize(EventArgs e)
         {
-             base.OnResize(e);
+            base.OnResize(e);
 
             if (DrawShadows && Parent != null)
             {

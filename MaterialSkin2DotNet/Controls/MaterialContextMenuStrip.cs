@@ -7,6 +7,7 @@
     using System.Drawing.Text;
     using System.Windows.Forms;
 
+    [ToolboxItem(false)]
     public class MaterialContextMenuStrip : ContextMenuStrip, IMaterialControl
     {
         //Properties for managing the material design properties
@@ -99,7 +100,7 @@
     {
         private const int LEFT_PADDING = 16;
         private const int RIGHT_PADDING = 8;
-        
+
         //Properties for managing the material design properties
         public int Depth { get; set; }
 
@@ -195,7 +196,7 @@
 
         private Rectangle GetItemRect(ToolStripItem item)
         {
-            return new Rectangle(0, item.ContentRectangle.Y, item.ContentRectangle.Width , item.ContentRectangle.Height);
+            return new Rectangle(0, item.ContentRectangle.Y, item.ContentRectangle.Width, item.ContentRectangle.Height);
         }
     }
 }

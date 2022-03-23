@@ -1,16 +1,21 @@
-﻿namespace MaterialSkin2DotNet {
-
-    using MaterialSkin2DotNet.Controls;
+﻿namespace MaterialSkin2DotNet
+{
     using System.Drawing;
 
-    public class ColorScheme {
+    public class ColorScheme
+    {
         public readonly Color PrimaryColor, DarkPrimaryColor, LightPrimaryColor, AccentColor, TextColor;
 
         public readonly Pen PrimaryPen, DarkPrimaryPen, LightPrimaryPen, AccentPen, TextPen;
 
         public readonly Brush PrimaryBrush, DarkPrimaryBrush, LightPrimaryBrush, AccentBrush, TextBrush;
 
-        public ColorScheme(Primary primary = Primary.Indigo500, Primary darkPrimary = Primary.Indigo700, Primary lightPrimary = Primary.Indigo100, Accent accent = Accent.Pink200, TextShade textShade = TextShade.WHITE) {
+        public ColorScheme() : this(Primary.Indigo500, Primary.Indigo700, Primary.Indigo100, Accent.Pink200, TextShade.WHITE)
+        {
+        }
+
+        public ColorScheme(Primary primary, Primary darkPrimary, Primary lightPrimary, Accent accent, TextShade textShade)
+        {
             //Color
             PrimaryColor = ((int)primary).ToColor();
             DarkPrimaryColor = ((int)darkPrimary).ToColor();
@@ -33,7 +38,32 @@
             TextBrush = new SolidBrush(TextColor);
         }
 
-        public ColorScheme(Color primary, Color darkPrimary, Color lightPrimary, Color accent, TextShade textShade) {
+        public ColorScheme(int primary, int darkPrimary, int lightPrimary, int accent, TextShade textShade)
+        {
+            //Color
+            PrimaryColor = ((int)primary).ToColor();
+            DarkPrimaryColor = ((int)darkPrimary).ToColor();
+            LightPrimaryColor = ((int)lightPrimary).ToColor();
+            AccentColor = ((int)accent).ToColor();
+            TextColor = ((int)textShade).ToColor();
+
+            //Pen
+            PrimaryPen = new Pen(PrimaryColor);
+            DarkPrimaryPen = new Pen(DarkPrimaryColor);
+            LightPrimaryPen = new Pen(LightPrimaryColor);
+            AccentPen = new Pen(AccentColor);
+            TextPen = new Pen(TextColor);
+
+            //Brush
+            PrimaryBrush = new SolidBrush(PrimaryColor);
+            DarkPrimaryBrush = new SolidBrush(DarkPrimaryColor);
+            LightPrimaryBrush = new SolidBrush(LightPrimaryColor);
+            AccentBrush = new SolidBrush(AccentColor);
+            TextBrush = new SolidBrush(TextColor);
+        }
+
+        public ColorScheme(Color primary, Color darkPrimary, Color lightPrimary, Color accent, TextShade textShade)
+        {
             //Color
             PrimaryColor = primary;
             DarkPrimaryColor = darkPrimary;
@@ -58,12 +88,14 @@
     }
 
     //Color constants
-    public enum TextShade {
+    public enum TextShade
+    {
         WHITE = 0xFFFFFF,
         BLACK = 0x212121
     }
 
-    public enum Primary {
+    public enum Primary
+    {
         Red50 = 0xFFEBEE,
         Red100 = 0xFFCDD2,
         Red200 = 0xEF9A9A,
@@ -256,7 +288,8 @@
         BlueGrey900 = 0x263238
     }
 
-    public enum Accent {
+    public enum Accent
+    {
         Red100 = 0xFF8A80,
         Red200 = 0xFF5252,
         Red400 = 0xFF1744,
