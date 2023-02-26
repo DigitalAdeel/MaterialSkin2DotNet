@@ -5,6 +5,8 @@ Now .NET Framework version/nuget is also available (Thanks to [Special-Niewbie](
 
 [Repo    - MaterialSkin2Framework](https://github.com/digitaladeel/MaterialSkin2Framework)
 
+![if you don't ask you don't get](https://www.azquotes.com/picture-quotes/quote-you-don-t-know-you-re-going-to-get-a-no-until-you-ask-and-if-you-don-t-ask-you-ve-given-jack-canfield-87-91-31.jpg)
+
 
 # Need a desktop app or wanna support me (Nobody is gonna scroll down at the end of this readme, So 😒)
 ![https://www.fiverr.com/da_solutions](https://github.com/DigitalAdeel/MaterialSkin2DotNet/blob/master/Screenshot%20(88).png)
