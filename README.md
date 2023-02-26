@@ -1,3 +1,11 @@
+# Attention
+Now .NET Framework version/nuget is also available (Thanks to [Special-Niewbie](https://github.com/Special-Niewbie), who asked me for Framework version)
+
+[Nuget - MaterialSkin2Framework](https://www.nuget.org/packages/MaterialSkin2Framework)
+
+[Repo    - MaterialSkin2Framework](https://github.com/digitaladeel/MaterialSkin2Framework)
+
+
 # Need a desktop app or wanna support me (Nobody is gonna scroll down at the end of this readme, So 😒)
 ![https://www.fiverr.com/da_solutions](https://github.com/DigitalAdeel/MaterialSkin2DotNet/blob/master/Screenshot%20(88).png)
 # MaterialSkin for .NETCORE WinForms
