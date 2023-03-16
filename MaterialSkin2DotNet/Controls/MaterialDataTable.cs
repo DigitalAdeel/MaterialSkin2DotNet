@@ -6,9 +6,11 @@
     using System.Drawing.Drawing2D;
     using System.Runtime.CompilerServices;
     using System.Windows.Forms;
+
     public sealed class MaterialDataTable : DataGridView, IMaterialControl, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             if (PropertyChanged != null)
@@ -41,6 +43,7 @@
                 Invalidate();
             }
         }
+
         private bool showColorStripping { get; set; }
 
         [Browsable(true)]
@@ -104,25 +107,11 @@
                 Invalidate();
             }
         }
-        [Browsable(true)]
-        [Category("MaterialSkin2Dotnet")]
-
-        //        public bool UsePrimaryColorForCellSelection { get; set; }
-        /*private Accent cellSelectionAccentColor { get; set; }
 
         [Browsable(true)]
         [Category("MaterialSkin2Dotnet")]
-        public Accent CellSelectionAccentColor
-        {
-            get => cellSelectionAccentColor;
-            set
-            {
-                    CellSelectionAccentColor = value;
-                    DefaultCellStyle.SelectionBackColor = ((int)value).ToColor();
-            }
-        }*/
-
         private Primary cellSelectionPrimaryColor { get; set; }
+
         [Browsable(true)]
         [Category("MaterialSkin2Dotnet")]
         public Primary CellSelectionPrimaryColor
@@ -130,23 +119,22 @@
             get => cellSelectionPrimaryColor;
             set
             {
-
                 cellSelectionPrimaryColor = value;
                 DefaultCellStyle.SelectionBackColor = ((int)value).ToColor();
             }
-
         }
 
         //private const int PAD = 16;
         private bool _drawShadows;
+
         private bool _shadowDrawEventSubscribed = false;
+
         public MaterialDataTable()
         {
             DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             DefaultCellStyle.SelectionBackColor = SkinManager.ColorScheme.PrimaryColor;
-            ColumnHeadersDefaultCellStyle.BackColor =
-               SkinManager.BackgroundColor;
+            ColumnHeadersDefaultCellStyle.BackColor = SkinManager.BackgroundColor;
             ColumnHeadersDefaultCellStyle.ForeColor = SkinManager.TextHighEmphasisColor;
             GridColor = Color.FromArgb(239, 239, 239);
             RowsDefaultCellStyle.BackColor = SkinManager.BackgroundColor;
@@ -172,7 +160,6 @@
             RowTemplate.Height = 52;
             AdvancedColumnHeadersBorderStyle.All = DataGridViewAdvancedCellBorderStyle.None;
             ScrollBars = ScrollBars.None;
-
 
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
             BackgroundColor = SkinManager.BackgroundColor;
@@ -213,19 +200,29 @@
             pagingPanel.Controls.Add(btn);
             Controls.Add(pagingPanel);
         }
-        MaterialScrollBar scrollBar = new MaterialScrollBar();
-        Panel pagingPanel = new Panel();
+
+        private MaterialScrollBar scrollBar = new MaterialScrollBar();
+        private Panel pagingPanel = new Panel();
+
         protected override void OnScroll(ScrollEventArgs e)
         {
             base.OnScroll(e);
-            if (showScrollBar == true)
-                scrollBar.Value = e.NewValue;
+            if (DataSource != null)
+            {
+                if (showScrollBar == true)
+                    scrollBar.Value = e.NewValue;
+            }
         }
 
         private void ScrollBar_ValueChanged(object sender, int newValue)
         {
-            scrollBar.Maximum = Rows.Count - 1;
-            FirstDisplayedScrollingRowIndex = newValue;
+            // Rows.Count > 0 will take care of the System.ArgumentOutOfRange Exception that is thrown when the scrollbar is moved
+            // Credit for finding and reporting this Exception goes to @Dr33v3s 👍
+            if (Rows.Count > 0)
+            {
+                scrollBar.Maximum = Rows.Count - 1;
+                FirstDisplayedScrollingRowIndex = newValue;
+            }
         }
 
         protected override void OnClientSizeChanged(EventArgs e)
@@ -240,7 +237,9 @@
                 scrollBar.Visible = false;
             }
         }
+
         private bool IsMouseOver;
+
         private void MaterialDataTable_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
         {
             if (showColorStripping != true)
@@ -265,15 +264,14 @@
                 if (e.RowIndex >= 0 && e.ColumnIndex >= 0 && SkinManager.Theme == MaterialSkinManager.Themes.LIGHT)
                 {
                     Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.FromArgb(245, 245, 245);
-
                 }
                 if (e.RowIndex >= 0 && e.ColumnIndex >= 0 && SkinManager.Theme == MaterialSkinManager.Themes.DARK)
                 {
                     Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.FromArgb(95, 95, 95);
-
                 }
             }
         }
+
         protected override void OnRowsAdded(DataGridViewRowsAddedEventArgs e)
         {
             base.OnRowsAdded(e);
@@ -294,7 +292,6 @@
                             else
                             {
                                 Rows[i].DefaultCellStyle.ForeColor = SkinManager.TextHighEmphasisColor;
-
                             }
                         }
                         if (SkinManager.Theme == MaterialSkinManager.Themes.DARK)
@@ -318,6 +315,7 @@
 
             Invalidate();
         }
+
         protected override void OnMouseWheel(MouseEventArgs e)
         {
             base.OnMouseWheel(e);
@@ -331,17 +329,17 @@
                 scrollBar.Value++;
             }
         }
+
         protected override void OnDataSourceChanged(EventArgs e)
         {
             base.OnDataSourceChanged(e);
             scrollBar.Maximum = RowCount - 1;
-
         }
+
         private void ColorSchemeChanged()
         {
             DefaultCellStyle.SelectionBackColor =
                 SkinManager.ColorScheme.PrimaryColor;
-
         }
 
         private void ThemeChanged()
@@ -365,9 +363,13 @@
                 ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(255, 255, 255, 255);
                 GridColor = Color.FromArgb(80, 80, 80);
                 BackgroundColor = Color.FromArgb(80, 80, 80);
+
                 #region RowsCells
+
                 ColorStriper();
-                #endregion
+
+                #endregion RowsCells
+
                 Update();
                 UpdateStyles();
                 Invalidate();
@@ -417,7 +419,6 @@
                             Rows[i].DefaultCellStyle.BackColor = Color.FromArgb(80, 80, 80);
                         }
                     }
-
                 }
                 for (int i = 0; i < Rows.Count - 1; i++)
                 {
@@ -451,7 +452,6 @@
                         Rows[i].DefaultCellStyle.BackColor = Color.FromArgb(80, 80, 80);
                     }
                 }
-
             }
             for (int i = 0; i < Rows.Count - 1; i++)
             {
@@ -461,6 +461,7 @@
                 }
             }
         }
+
         protected override void OnCreateControl()
         {
             base.OnCreateControl();
@@ -505,6 +506,7 @@
                 ColorStriper();
             }
         }
+
         protected override void OnColumnAdded(DataGridViewColumnEventArgs e)
         {
             base.OnColumnAdded(e);
@@ -516,8 +518,8 @@
             {
                 ColumnHeadersHeight = 56;
             }
-
         }
+
         protected override void InitLayout()
         {
             LocationChanged += (sender, e) =>
@@ -526,6 +528,7 @@
             };
             ForeColor = SkinManager.TextHighEmphasisColor;
         }
+
         protected override void OnParentChanged(EventArgs e)
         {
             base.OnParentChanged(e);
@@ -562,7 +565,6 @@
             gp.SmoothingMode = SmoothingMode.AntiAlias;
             DrawHelper.DrawSquareShadow(gp, rect);
         }
-
 
         private void AddShadowPaintEvent(Control control, PaintEventHandler shadowPaintEvent)
         {
@@ -615,7 +617,6 @@
                             else
                             {
                                 Rows[i].DefaultCellStyle.ForeColor = Color.FromArgb(255, 255, 255, 255);
-
                             }
                         }
                         if (SkinManager.Theme == MaterialSkinManager.Themes.DARK)
@@ -629,11 +630,11 @@
                                 Rows[i].DefaultCellStyle.ForeColor = Color.FromArgb(80, 80, 80);
                             }
                         }
-
                     }
                 }
             }
         }
+
         //Pagination
 
         /*        Paging pg;
@@ -675,7 +676,6 @@
                     MessageBox.Show("The changes are committed to database!");
                 }
             }
-
 
             /// <summary>
             /// Gives functionality of next page , etc for paging.
@@ -823,17 +823,14 @@
                         }
                         return _bindingSource;
                     }
-
                 }
             }
-
 
             /// <summary>
             /// Query Helper of Paging
             /// </summary>
             public class SQLQuery
             {
-
                 private string IDColumn = "";
                 private string WherePart = " 1=1 ";
                 private string FromPart = "";
@@ -845,7 +842,6 @@
                     this.WherePart = WherePart;
                     this.FromPart = FromPart;
                     this.SelectPart = SelectPart;
-
                 }
 
                 public string CompleteQuery
@@ -874,12 +870,9 @@
                         else
                         {
                             return string.Format("Select count(*) from {0} ", FromPart);
-
                         }
                     }
                 }
-
-
 
                 public string GetPagingQuery(int fromrow, int torow, bool isSerial)
                 {
@@ -910,11 +903,8 @@
                         {
                             return string.Format("{0} except {1} ", select1, select2);
                         }
-
                     }
                 }
-
-
             }
         */
     }
